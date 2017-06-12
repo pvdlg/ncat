@@ -16,7 +16,7 @@ test('writes to stdout', async(t) => {
   t.ifError(error, stderr);
 
   t.is(
-    await stdout,
+    stdout,
     await read('test/fixtures/ab.css')
   );
 });

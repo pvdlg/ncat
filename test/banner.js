@@ -46,3 +46,16 @@ test('--banner works with custom banner', async(t) => {
     await read('test/fixtures/ab-header.css')
   );
 });
+
+test('--banner works with one file', (t) =>
+  cli(
+    [
+      'test/fixtures/a.css',
+      '-b'
+    ]
+  ).then(({
+    code
+  }) => {
+    t.is(code, 0, 'expected zero return code');
+  })
+);

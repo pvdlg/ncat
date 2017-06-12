@@ -16,10 +16,11 @@ const chalk = yargonaut.chalk();
 const LOGGERS = {
   ADD: chalk.dim.cyan,
   WRITE: chalk.cyan,
-  ERROR: chalk.bold.red
+  ERROR: chalk.bold.red,
+  WARN: chalk.bold.yellow
 };
 const DEFAULT_BANNER = (pkg) =>
-`/*!
+  `/*!
  * ${pkg.name ? pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) : 'unknown'} v${pkg.version || '0.0.0'}
  * ${pkg.homepage || `https://npm.com/${pkg.name}`}
  *
@@ -29,39 +30,42 @@ const DEFAULT_BANNER = (pkg) =>
 yargonaut.helpStyle('bold.green').errorsStyle('red');
 
 const argv = yargs.usage(
-`${chalk.bold.green('Usage:')}
+    `${chalk.bold.green('Usage:')}
   ncat [<FILES>] [OPTIONS]`
-)
-.option('o', {
-  alias: 'output',
-  desc: 'Output file',
-  type: 'string'
-})
-.option('m', {
-  alias: 'map',
-  desc: 'Create an external sourcemap (including the sourcemaps of existing files)',
-  type: 'boolean'
-})
-.option('e', {
-  alias: 'map-embed',
-  desc: 'Embed the code in the sourcemap',
-  type: 'boolean'
-})
-.option('b', {
-  alias: 'banner',
-  desc: 'Add a banner built with the package.json file. Optionally pass the path to .js file containing custom banner',
-  type: 'string'
-})
-.epilog(chalk.yellow(
-`If a file is a single dash ('-'), it reads from stdin.
-If -o is not passed, the sourcemap is disabled and it writes to stdout.`))
-.example('ncat input_1.js input_2.js -o output.js', 'Basic usage')
-.example('cat input_1.js | ncat - input_2.js > output.js', 'Piping input & output')
-.example('ncat input_1.js -b -o output.js', 'Add the default banner')
-.example('ncat input_1.js -b ./banner.js -o output.js', 'Add a custom banner')
-.help('help')
-.version(() => require('./package').version)
-.argv;
+  )
+  .option('o', {
+    alias: 'output',
+    desc: 'Output file',
+    type: 'string'
+  })
+  .option('m', {
+    alias: 'map',
+    desc: 'Create an external sourcemap (including the sourcemaps of existing files)',
+    type: 'boolean'
+  })
+  .option('e', {
+    alias: 'map-embed',
+    desc: 'Embed the code in the sourcemap',
+    type: 'boolean'
+  })
+  .option('b', {
+    alias: 'banner',
+    desc:
+      'Add a banner built with the package.json file. Optionally pass the path to .js file containing custom banner',
+    type: 'string'
+  })
+  .epilog(chalk.yellow(
+    `If a file is a single dash ('-'), it reads from stdin.
+If -o is not passed, the sourcemap is disabled and it writes to stdout.`
+  ))
+  .example('ncat input_1.js input_2.js -o output.js', 'Basic usage')
+  .example('cat input_1.js | ncat - input_2.js > output.js', 'Piping input & output')
+  .example('ncat input_1.js -b -o output.js', 'Add the default banner')
+  .example('ncat input_1.js -b ./banner.js -o output.js', 'Add a custom banner')
+  .help('h')
+  .alias('h', 'help')
+  .version()
+  .argv;
 
 const concatFiles =
   new Concat(argv.output !== undefined && argv.output !== null && argv.map, argv.output || '', '\n');
@@ -78,61 +82,83 @@ if (typeof argv.banner !== 'undefined') {
   }
 }
 
-if (argv._.length > 1 || argv._.length === 1 && typeof argv.banner !== 'undefined') {
-  const files = [];
+const files = [];
 
-  argv._.forEach((file) => {
-    if (file === '-') {
-      files.push(file);
-    } else {
-      files.push(...glob.sync(file));
-    }
-  });
-  async.eachSeries(files, (filename, cb) => {
-    if (filename === '-') {
-      getStdin.buffer().then((stdin) => {
-        log(LOGGERS.ADD, 'Add stdin');
-        concatFiles.add(null, stdin);
-        cb();
-      });
-    } else {
-      fs.readFile(filename, (err, content) => {
-        if (err) {
-          cb(err);
-        } else if (argv.map && argv.output) {
-          sourceMapResolve.resolveSourceMap(content.toString(), filename, fs.readFile, (readMapErr,
-            result) => {
-            if (result && !readMapErr) {
-              log(LOGGERS.ADD, `Add: ${filename}`);
-              log(LOGGERS.ADD, `Add sourcemap: ${result.url}`);
-              concatFiles.add(path.relative(path.dirname(argv.output), filename), sourceMappingURL.removeFrom(
-                content.toString()), result.map);
-            } else {
-              log(LOGGERS.ADD, `Add: ${filename}`);
-              concatFiles.add(path.relative(path.dirname(argv.output), filename), content, argv['map-embed'] ? {
-                sourcesContent: [content.toString()]
-              } : undefined);
-            }
-            cb(readMapErr);
-          });
-        } else {
-          log(LOGGERS.ADD, `Add: ${filename}`);
-          concatFiles.add(filename, content);
-          cb();
-        }
-      });
-    }
-  }, (readErr) => {
-    if (readErr) {
-      console.trace(readErr);
-      process.exit(1);
-    }
-    output();
-  });
-} else {
-  console.log(LOGGERS.ERROR('Require at least 2 files, or 1 file and a banner to concatenate.\n'));
+argv._.forEach((file) => {
+  if (file === '-') {
+    files.push(file);
+  } else {
+    files.push(...glob.sync(file));
+  }
+});
+
+if (files.length < 2 && typeof argv.banner === 'undefined' || files.length < 1) {
+  console.error(LOGGERS.ERROR('Require at least 2 files, or 1 file and a banner to concatenate.\n'));
   yargs.showHelp();
   process.exit(1);
+}
+
+async.eachSeries(files, (filename, cb) => {
+  if (filename === '-') {
+    getStdin.buffer().then((stdin) => {
+      log(LOGGERS.ADD, 'Add stdin');
+      concatFiles.add(null, stdin);
+      cb();
+    });
+  } else {
+    fs.readFile(filename, (err, content) => {
+      if (err) {
+        cb(err);
+      } else if (argv.map && argv.output) {
+        sourceMapResolve.resolveSourceMap(content.toString(), filename, fs.readFile, (readMapErr,
+          result) => {
+          if (result && !readMapErr) {
+            log(LOGGERS.ADD, `Add: ${filename}`);
+            log(LOGGERS.ADD, `Add sourcemap: ${result.url}`);
+            result.map.sources.forEach((source, i) => {
+              result.map.sources[i] = path.relative(path.dirname(argv.output), path.join(path.dirname(
+                filename), source));
+              if (argv['map-embed']) {
+                if (!result.map.sourcesContent) {
+                  result.map.sourcesContent = [];
+                }
+                if (!result.map.sourcesContent[i]) {
+                  result.map.sourcesContent[i] = removeMapURL(content.toString());
+                }
+              }
+            });
+            concatFiles.add(path.relative(path.dirname(argv.output), filename),
+              removeMapURL(content.toString()), result.map);
+          } else {
+            log(LOGGERS.ADD, `Add: ${filename}`);
+            concatFiles.add(path.relative(path.dirname(argv.output), filename),
+              removeMapURL(content.toString()), argv['map-embed'] ? {
+                sourcesContent: [removeMapURL(content.toString())]
+              } : undefined);
+          }
+          if (readMapErr) {
+            log(LOGGERS.WARN,
+              `The sourcemap ${readMapErr.path} referenced in ${filename} cannot be read and will be ignored`);
+          }
+          cb();
+        });
+      } else {
+        log(LOGGERS.ADD, `Add: ${filename}`);
+        concatFiles.add(filename, removeMapURL(content.toString()));
+        cb();
+      }
+    });
+  }
+}, (readErr) => {
+  if (readErr) {
+    console.trace(readErr);
+    process.exit(1);
+  }
+  output();
+});
+
+function removeMapURL(content) {
+  return sourceMappingURL.removeFrom(content).replace(/\n\n$/, '\n');
 }
 
 function output() {

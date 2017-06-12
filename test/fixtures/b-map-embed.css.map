@@ -1,8 +1,11 @@
 {
 	"version": 3,
-	"file": "b-map.css",
+	"file": "b-map-embed.css",
 	"sources": [
-		"b-map.css"
+		"b-map-embed.css"
+	],
+	"sourcesContent": [
+		".b {\n  color: blue;\n}\n"
 	],
 	"names": [],
 	"mappings": "AAAA,AAAA,EAAE,CAAC;EACD,KAAK,EAAE,IAAI,GACZ"
