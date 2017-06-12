@@ -14,3 +14,4 @@ script:
   - npm run test
 after_success:
   - if [ -n "${CODECLIMATE_REPO_TOKEN:-}" ]; then npm run codeclimate; fi
+  - if [ -n "${CODECOV_TOKEN:-}" ]; then npm run codecov; fi
