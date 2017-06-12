@@ -52,7 +52,13 @@ const argv = yargs.usage(
   .option('b', {
     alias: 'banner',
     desc:
-      'Add a banner built with the package.json file. Optionally pass the path to .js file containing custom banner',
+      'Add a banner built with the package.json file. Optionally pass the path to a .js file containing custom banner',
+    type: 'string'
+  })
+  .option('f', {
+    alias: 'footer',
+    desc:
+      'The path to .js file containing custom footer',
     type: 'string'
   })
   .epilog(chalk.yellow(
@@ -60,9 +66,11 @@ const argv = yargs.usage(
 If -o is not passed, the sourcemap is disabled and it writes to stdout.`
   ))
   .example('ncat input_1.js input_2.js -o output.js', 'Basic usage')
+  .example('ncat input_1.js input_2.js -m -o output.js', 'Basic usage with sourcemap')
   .example('cat input_1.js | ncat - input_2.js > output.js', 'Piping input & output')
   .example('ncat input_1.js -b -o output.js', 'Add the default banner')
   .example('ncat input_1.js -b ./banner.js -o output.js', 'Add a custom banner')
+  .example('ncat input_1.js -f ./footer.js -o output.js', 'Add a footer')
   .help('h')
   .alias('h', 'help')
   .version()
@@ -76,7 +84,7 @@ if (typeof argv.banner !== 'undefined') {
 
   if (argv.banner) {
     concatFiles.add(null, require(`${process.cwd()}/${argv.banner}`));
-    log(LOGGERS.ADD, `Add banner for ${argv.banner}`);
+    log(LOGGERS.ADD, `Add banner from ${argv.banner}`);
   } else {
     concatFiles.add(null, DEFAULT_BANNER(pkg.pkg));
     log(LOGGERS.ADD, `Add banner for ${pkg.path}`);
@@ -95,8 +103,9 @@ argv._.forEach((file) => {
   }
 });
 
-if (files.length < 2 && typeof argv.banner === 'undefined' || files.length < 1) {
-  console.error(LOGGERS.ERROR('Require at least 2 files, or 1 file and a banner to concatenate.\n'));
+if (files.length < 2 && typeof argv.banner === 'undefined' && !argv.footer ||
+  files.length < 1 && (typeof argv.banner === 'undefined' || !argv.footer)) {
+  console.error(LOGGERS.ERROR('Require at least 2 file, banner or footer to concatenate.\n'));
   yargs.showHelp();
   process.exit(1);
 }
@@ -157,6 +166,10 @@ async.eachSeries(files, (filename, cb) => {
   if (readErr) {
     console.trace(readErr);
     process.exit(1);
+  }
+  if (argv.footer) {
+    concatFiles.add(null, require(`${process.cwd()}/${argv.footer}`));
+    log(LOGGERS.ADD, `Add footer from ${argv.banner}`);
   }
   output();
 });

@@ -15,7 +15,7 @@ test('one file and no banner', async(t) => {
   );
 
   t.is(code, 1, 'expected non-zero error code');
-  t.regex(err.toString(), /Require at least 2 files, or 1 file and a banner to concatenate/);
+  t.regex(err.toString(), /Require at least 2 file, banner or footer to concatenate/);
 });
 
 test('no file and a banner', async(t) => {
@@ -29,7 +29,7 @@ test('no file and a banner', async(t) => {
   );
 
   t.is(code, 1, 'expected non-zero error code');
-  t.regex(err.toString(), /Require at least 2 files, or 1 file and a banner to concatenate/);
+  t.regex(err.toString(), /Require at least 2 file, banner or footer to concatenate/);
 });
 
 test('non-existing files', async(t) => {
@@ -43,7 +43,7 @@ test('non-existing files', async(t) => {
   );
 
   t.is(code, 1, 'expected non-zero error code');
-  t.regex(err.toString(), /Require at least 2 files, or 1 file and a banner to concatenate/);
+  t.regex(err.toString(), /Require at least 2 file, banner or footer to concatenate/);
 });
 
 test('Unredeable file', async(t) => {
@@ -55,7 +55,6 @@ test('Unredeable file', async(t) => {
   chmod(output, {
     read: false
   });
-
   const {
     err,
     code
@@ -76,7 +75,6 @@ test('Unwriteable output', async(t) => {
   chmod(output, {
     write: false
   });
-
   const {
     err,
     code
@@ -89,4 +87,22 @@ test('Unwriteable output', async(t) => {
 
   t.is(code, 1, 'expected non-zero error code');
   t.regex(err.toString(), /permission denied/);
+});
+
+test('Outout as a directory', async(t) => {
+  const output = tmp('dir');
+
+  fs.mkdirpSync(output);
+  const {
+    err,
+    code
+  } = await cli(
+    [
+      'test/fixtures/a.css', 'test/fixtures/b.css',
+      '-o', output
+    ]
+  );
+
+  t.is(code, 1, 'expected non-zero error code');
+  t.regex(err.toString(), /illegal operation on a directory/);
 });

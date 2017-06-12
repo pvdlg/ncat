@@ -1,7 +1,7 @@
 {
   "name": "ncat",
   "version": "1.0.0",
-  "description": "Concatenate multiple files, with their sourcemaps and optionally stdin and a banner",
+  "description": "Concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer",
   "main": "index.js",
   "bin": {
     "ncat": "./bin/ncat"
@@ -24,7 +24,8 @@
     "files",
     "sourcemap",
     "header",
-    "banner"
+    "banner",
+    "footer"
   ],
   "author": "Pierre Vanduynslager",
   "license": "MIT",
