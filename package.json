@@ -10,9 +10,9 @@
     "clean": "del test/fixtures/.tmp && del coverage && del .nyc_output",
     "lint": "eslint index.js test",
     "pretest": "npm run lint && npm run clean",
-    "test": "nyc ava -v && nyc report --reporter=lcov",
-    "codeclimate": "codeclimate-test-reporter < coverage/lcov.info",
-    "codecov": "codecov --file coverage/lcov.info"
+    "test": "nyc ava -v",
+    "codeclimate": "nyc report --reporter=text-lcov | codeclimate-test-reporter",
+    "codecov": "nyc report --reporter=text-lcov |  codecov"
   },
   "repository": {
     "type": "git",
