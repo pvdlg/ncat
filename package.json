@@ -12,7 +12,7 @@
     "pretest": "npm run lint && npm run clean",
     "test": "nyc ava -v",
     "codeclimate": "nyc report --reporter=text-lcov | codeclimate-test-reporter",
-    "codecov": "nyc report --reporter=text-lcov |  codecov"
+    "codecov": "nyc report --reporter=text-lcov | codecov"
   },
   "repository": {
     "type": "git",
