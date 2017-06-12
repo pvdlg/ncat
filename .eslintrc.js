@@ -274,9 +274,7 @@ module.exports = {
     'import/no-unresolved': [2, {
       'commonjs': true,
       'amd': true,
-      'ignore': ['window', 'document', 'jsf', 'Modernizr', 'Bloodhound', 'history', 'PNotify', 'autosize', 'Mark',
-        'Cookies', 'AnimationFrame'
-      ]
+      'ignore': ['window', 'document', 'glob']
     }],
     'import/named': 2,
     'import/default': 2,
