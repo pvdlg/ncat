@@ -42,6 +42,11 @@ const argv = yargs.usage(
   desc: 'Create an external sourcemap (including the sourcemaps of existing files)',
   type: 'boolean'
 })
+.option('e', {
+  alias: 'map-embed',
+  desc: 'Embed the code in the sourcemap',
+  type: 'boolean'
+})
 .option('b', {
   alias: 'banner',
   desc: 'Add a banner built with the package.json file. Optionally pass the path to .js file containing custom banner',
@@ -104,16 +109,14 @@ if (argv._.length > 1 || argv._.length === 1 && typeof argv.banner !== 'undefine
                 content.toString()), result.map);
             } else {
               log(LOGGERS.ADD, `Add: ${filename}`);
-              // TODO if embed
-              concatFiles.add(path.relative(path.dirname(argv.output), filename), content, {
+              concatFiles.add(path.relative(path.dirname(argv.output), filename), content, argv['map-embed'] ? {
                 sourcesContent: [content.toString()]
-              });
+              } : undefined);
             }
             cb(readMapErr);
           });
         } else {
           log(LOGGERS.ADD, `Add: ${filename}`);
-          // TODO if embed
           concatFiles.add(filename, content);
           cb();
         }

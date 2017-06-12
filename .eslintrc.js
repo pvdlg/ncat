@@ -273,8 +273,7 @@ module.exports = {
     // Imports
     'import/no-unresolved': [2, {
       'commonjs': true,
-      'amd': true,
-      'ignore': ['window', 'document', 'glob']
+      'amd': true
     }],
     'import/named': 2,
     'import/default': 2,
