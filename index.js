@@ -88,7 +88,9 @@ argv._.forEach((file) => {
   if (file === '-') {
     files.push(file);
   } else {
-    files.push(...glob.sync(file));
+    files.push(...glob.sync(file, {
+      nodir: true
+    }));
   }
 });
 
