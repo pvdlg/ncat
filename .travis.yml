@@ -1,0 +1,15 @@
+sudo: false
+dist: trusty
+language: node_js
+node_js:
+  - node
+  - 6
+  - 4
+git:
+  depth: 3
+cache:
+  directories: node_modules
+script:
+  - npm run test
+after_success:
+  - if [ -n "${CODECLIMATE_REPO_TOKEN:-}" ]; then npm run codeclimate; fi
