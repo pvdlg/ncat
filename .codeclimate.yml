@@ -5,6 +5,8 @@ engines:
       config: .eslintrc.js
   duplication:
     enabled: true
+    exclude_paths:
+      - tests/**/*
     config:
       languages:
         - javascript
