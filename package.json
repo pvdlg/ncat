@@ -55,7 +55,6 @@
     "codeclimate-test-reporter": "^0.5.0",
     "del-cli": "^1.0.0",
     "eslint": "^3.19.0",
-    "eslint-plugin-eslint-comments": "^1.0.1",
     "eslint-plugin-import": "^2.3.0",
     "fs-extra": "^3.0.1",
     "nyc": "^11.0.2",

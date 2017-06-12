@@ -8,7 +8,7 @@ module.exports = {
       'globalReturn': true
     }
   },
-  'plugins': ['import', 'eslint-comments'],
+  'plugins': ['import'],
   'env': {
     'es6': true,
     'node': true
@@ -304,14 +304,6 @@ module.exports = {
     'import/prefer-default-export': 0,
     'import/max-dependencies': 0,
     'import/no-unassigned-import': 0,
-    'import/no-named-default': 2,
-
-    // ESLint comments
-    'eslint-comments/disable-enable-pair': 2,
-    'eslint-comments/no-duplicate-disable': 2,
-    'eslint-comments/no-unlimited-disable': 2,
-    'eslint-comments/no-unused-disable': 2,
-    'eslint-comments/no-unused-enable': 2,
-    'eslint-comments/no-use': 0
+    'import/no-named-default': 2
   }
 }
