@@ -1,0 +1,17 @@
+coverage:
+  status:
+    project:
+      default:
+        enabled: yes
+        target: auto
+        if_not_found: success
+    patch:
+      default:
+        enabled: yes
+        target: 90%
+        if_not_found: success
+    changes:
+      default:
+        enabled: yes
+        target: 90%
+        if_not_found: success
