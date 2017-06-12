@@ -3,7 +3,7 @@ coverage:
     project:
       default:
         enabled: yes
-        target: 90%
+        target: auto
         if_not_found: success
     patch:
       default:
