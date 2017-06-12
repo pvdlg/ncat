@@ -14,7 +14,6 @@ test('--help', async(t) => {
   );
 
   t.ifError(error, stderr);
-
   t.is(code, 0, 'expected zero return code');
   t.regex(stdout, /Usage:/);
   t.regex(stdout, /Options:/);
@@ -34,7 +33,6 @@ test('--version', async(t) => {
   );
 
   t.ifError(error, stderr);
-
   t.is(code, 0, 'expected zero return code');
   t.is(stdout, `${require('./../package').version}\n`);
 });

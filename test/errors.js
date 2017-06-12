@@ -1,44 +1,92 @@
 import test from 'ava';
+import chmod from 'chmod';
+import fs from 'fs-extra';
+import tmp from './helpers/tmp';
 import cli from './helpers/cli';
 
-test('one file and no banner', (t) =>
-  cli(
+test('one file and no banner', async(t) => {
+  const {
+    err,
+    code
+  } = await cli(
     [
       'test/fixtures/a.css'
     ]
-  ).then(({
+  );
+
+  t.is(code, 1, 'expected non-zero error code');
+  t.regex(err.toString(), /Require at least 2 files, or 1 file and a banner to concatenate/);
+});
+
+test('no file and a banner', async(t) => {
+  const {
     err,
     code
-  }) => {
-    t.is(code, 1, 'expected non-zero error code');
-    t.regex(err.toString(), /Require at least 2 files, or 1 file and a banner to concatenate./);
-  })
-);
-
-test('no file and a banner', (t) =>
-  cli(
+  } = await cli(
     [
       '-b'
     ]
-  ).then(({
+  );
+
+  t.is(code, 1, 'expected non-zero error code');
+  t.regex(err.toString(), /Require at least 2 files, or 1 file and a banner to concatenate/);
+});
+
+test('non-existing files', async(t) => {
+  const {
     err,
     code
-  }) => {
-    t.is(code, 1, 'expected non-zero error code');
-    t.regex(err.toString(), /Require at least 2 files, or 1 file and a banner to concatenate./);
-  })
-);
-
-test('non-existing files', (t) =>
-  cli(
+  } = await cli(
     [
       'test/fixtures/non-existing.css', 'test/fixtures/a.css'
     ]
-  ).then(({
+  );
+
+  t.is(code, 1, 'expected non-zero error code');
+  t.regex(err.toString(), /Require at least 2 files, or 1 file and a banner to concatenate/);
+});
+
+test('Unredeable file', async(t) => {
+  const output = tmp('unreadeable.css');
+
+  fs.outputFileSync(output, 'empty', {
+    encoding: 'utf8'
+  });
+  chmod(output, {
+    read: false
+  });
+
+  const {
     err,
     code
-  }) => {
-    t.is(code, 1, 'expected non-zero error code');
-    t.regex(err.toString(), /Require at least 2 files, or 1 file and a banner to concatenate./);
-  })
-);
+  } = await cli(
+    [
+      output, 'test/fixtures/a.css'
+    ]
+  );
+
+  t.is(code, 1, 'expected non-zero error code');
+  t.regex(err.toString(), /permission denied/);
+});
+
+test('Unwriteable output', async(t) => {
+  const output = tmp('unwriteable');
+
+  fs.mkdirpSync(output);
+  chmod(output, {
+    write: false
+  });
+
+  const {
+    err,
+    code
+  } = await cli(
+    [
+      'test/fixtures/a.css', 'test/fixtures/b.css',
+      '-o', `${output}/output.css`
+    ]
+  );
+
+  t.is(code, 1, 'expected non-zero error code');
+  t.regex(err.toString(), /permission denied/);
+});

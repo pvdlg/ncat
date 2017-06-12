@@ -6,7 +6,6 @@ import read from './helpers/read';
 
 test('concatenate stdin', async(t) => {
   const output = tmp('output.css');
-
   const {
     error,
     stderr
@@ -19,7 +18,6 @@ test('concatenate stdin', async(t) => {
   );
 
   t.ifError(error, stderr);
-
   t.is(
     await read(output),
     await read('test/fixtures/ab.css')

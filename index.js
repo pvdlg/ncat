@@ -21,11 +21,12 @@ const LOGGERS = {
 };
 const DEFAULT_BANNER = (pkg) =>
   `/*!
- * ${pkg.name ? pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) : 'unknown'} v${pkg.version || '0.0.0'}
- * ${pkg.homepage || `https://npm.com/${pkg.name}`}
+ * ${pkg.name ? pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) : 'unknown'} v${
+   pkg.version || '0.0.0'}${pkg.homepage || pkg.name ? `\n * ${
+     pkg.homepage || `https://npm.com/${pkg.name}`}` : ''}
  *
- * Copyright (c) ${new Date().getFullYear()} ${pkg.author.name || ''}
- * ${pkg.license ? ` Licensed under the ${pkg.license} license\n *` : ''}/\n`;
+ * Copyright (c) ${new Date().getFullYear()}${pkg.author && pkg.author.name ? ` ${pkg.author.name}` : ''}
+ *${pkg.license ? ` Licensed under the ${pkg.license} license\n *` : ''}/\n`;
 
 yargonaut.helpStyle('bold.green').errorsStyle('red');
 
@@ -140,7 +141,8 @@ async.eachSeries(files, (filename, cb) => {
           }
           if (readMapErr) {
             log(LOGGERS.WARN,
-              `The sourcemap ${readMapErr.path} referenced in ${filename} cannot be read and will be ignored`);
+              `The sourcemap ${readMapErr.path} referenced in ${filename} cannot be read and will be ignored`
+            );
           }
           cb();
         });
@@ -176,11 +178,9 @@ function output() {
     } : null], (file, cb) => {
       if (file) {
         fs.outputFile(file.path, file.content, (err) => {
-          if (err) {
-            console.trace(err);
-            process.exit(1);
+          if (!err) {
+            log(LOGGERS.WRITE, `Write: ${file.path}`);
           }
-          log(LOGGERS.WRITE, `Write: ${file.path}`);
           cb(err);
         });
       }
