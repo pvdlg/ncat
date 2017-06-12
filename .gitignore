@@ -1,0 +1,8 @@
+._*
+.cache
+.DS_Store
+
+node_modules
+coverage
+.nyc_output
+test/fixtures/.tmp
