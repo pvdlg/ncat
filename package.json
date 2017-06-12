@@ -19,13 +19,15 @@
   },
   "keywords": [
     "concatenate",
+    "concatenation",
     "cat",
     "concat",
     "files",
     "sourcemap",
     "header",
     "banner",
-    "footer"
+    "footer",
+    "cli"
   ],
   "author": "Pierre Vanduynslager",
   "license": "MIT",

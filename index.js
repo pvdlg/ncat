@@ -90,7 +90,6 @@ if (typeof argv.banner !== 'undefined') {
     log(LOGGERS.ADD, `Add banner for ${pkg.path}`);
   }
 }
-
 const files = [];
 
 argv._.forEach((file) => {
@@ -174,10 +173,20 @@ async.eachSeries(files, (filename, cb) => {
   output();
 });
 
-function removeMapURL(content) {
-  return sourceMappingURL.removeFrom(content).replace(/\n\n$/, '\n');
+ /**
+  * Removes the sourceMappingURL comment in code and eventual double new line character.
+  *
+  * @param  {String}     code the code to modify
+  * @return {String}          the modified code
+  */
+function removeMapURL(code) {
+  return sourceMappingURL.removeFrom(code).replace(/\n\n$/, '\n');
 }
 
+/**
+ * Write the output to he file passed in --output or to the stdout if not set.
+ * Also write the sourcemap file if both --map and --output are set.
+ */
 function output() {
   if (argv.output) {
     async.each([{
@@ -210,6 +219,12 @@ function output() {
   }
 }
 
+/**
+ * Log to the console, only if --output is set.
+ *
+ * @param  {Function} logger Chalk logger
+ * @param  {String}   msg    Message to log
+ */
 function log(logger, msg) {
   if (argv.output) {
     console.log(logger(msg));
