@@ -1,7 +1,7 @@
 {
   "name": "ncat",
   "version": "1.0.0",
-  "description": "Concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer",
+  "description": "Node CLI to concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer",
   "main": "index.js",
   "bin": {
     "ncat": "./bin/ncat"

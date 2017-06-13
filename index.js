@@ -32,7 +32,7 @@ yargonaut.helpStyle('bold.green').errorsStyle('red');
 
 const argv = yargs.usage(
     `${chalk.bold.green('Usage:')}
-  ncat [<FILES>] [OPTIONS]`
+  ncat [<FILES ...>] [OPTIONS] [-o|--output <OUTPUT_FILE>]`
   )
   .option('o', {
     alias: 'output',
@@ -52,28 +52,30 @@ const argv = yargs.usage(
   .option('b', {
     alias: 'banner',
     desc:
-      'Add a banner built with the package.json file. Optionally pass the path to a .js file containing custom banner',
+      `Add a banner built with the package.json file. Optionally pass the path
+      to a .js file containing custom banner that can be called with 'require()'`,
     type: 'string'
   })
   .option('f', {
     alias: 'footer',
     desc:
-      'The path to .js file containing custom footer',
+      'The path to .js file containing custom footer that can be called with \'require()\'',
     type: 'string'
   })
   .epilog(chalk.yellow(
     `If a file is a single dash ('-'), it reads from stdin.
 If -o is not passed, the sourcemap is disabled and it writes to stdout.`
   ))
-  .example('ncat input_1.js input_2.js -o output.js', 'Basic usage')
-  .example('ncat input_1.js input_2.js -m -o output.js', 'Basic usage with sourcemap')
-  .example('cat input_1.js | ncat - input_2.js > output.js', 'Piping input & output')
-  .example('ncat input_1.js -b -o output.js', 'Add the default banner')
-  .example('ncat input_1.js -b ./banner.js -o output.js', 'Add a custom banner')
-  .example('ncat input_1.js -f ./footer.js -o output.js', 'Add a footer')
+  .example('ncat file_1.js file_2.js -o dist/bundle.js', 'Basic usage')
+  .example('ncat file_1.js file_2.js -m -o dist/bundle.js', 'Basic usage with sourcemap')
+  .example('cat file_1.js | ncat - input_2.js > bundle.js', 'Piping input & output')
+  .example('ncat file_1.js -b -o dist/bundle.js', 'Add the default banner')
+  .example('ncat file_1.js -b ./banner.js -o dist/bundle.js', 'Add a custom banner')
+  .example('ncat file_1.js -f ./footer.js -o dist/bundle.js', 'Add a footer')
   .help('h')
   .alias('h', 'help')
   .version()
+  .alias('v', 'version')
   .argv;
 
 const concatFiles =
