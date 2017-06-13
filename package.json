@@ -52,7 +52,7 @@
     "yargs": "^8.0.2"
   },
   "devDependencies": {
-    "@metahub/eslint-config": "^1.0.0",
+    "@metahub/eslint-config": "^1.0.1",
     "ava": "^0.19.1",
     "chmod": "^0.2.1",
     "codecov": "^2.2.0",
