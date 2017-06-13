@@ -64,7 +64,7 @@
     "clean": "del test/fixtures/.tmp && del coverage && del .nyc_output && del .nyc_output",
     "lint": "eslint src test",
     "compile": "babel src --source-maps inline --out-dir lib",
-    "pretest": "npm run lint && npm run clean && npm run compile",
+    "pretest": "npm run clean && npm run compile",
     "test": "nyc ava -v && nyc report --reporter=lcov",
     "codecov": "codecov",
     "prepublish": "npm run lint && npm run clean && npm run compile"
