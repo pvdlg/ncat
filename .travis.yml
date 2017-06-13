@@ -6,6 +6,9 @@ node_js:
   - 7
   - 6
   - 5
+os:
+  - linux
+  - osx
 git:
   depth: 3
 cache:
