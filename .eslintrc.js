@@ -4,6 +4,7 @@ module.exports = {
     '@metahub/eslint-config/es6-config'
   ],
   'parserOptions': {
-    'ecmaVersion': 8
+    'ecmaVersion': 8,
+    'sourceType': 'module'
  }
 };
