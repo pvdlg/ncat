@@ -1,4 +1,4 @@
-const {pkg} = require('read-pkg-up').sync();
+const pkg = require('read-pkg-up').sync().pkg;
 
 module.exports =
 `/*!
