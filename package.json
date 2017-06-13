@@ -49,16 +49,14 @@
     "source-map-resolve": "^0.5.0",
     "source-map-url": "^0.4.0",
     "yargonaut": "^1.1.2",
-    "yargs": "^8.0.1"
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
+    "@metahub/eslint-config": "^1.0.0",
     "ava": "^0.19.1",
-    "babel-eslint": "^7.2.3",
     "chmod": "^0.2.1",
     "codecov": "^2.2.0",
     "del-cli": "^1.0.0",
-    "eslint": "^3.19.0",
-    "eslint-plugin-import": "^2.3.0",
     "fs-extra": "^3.0.1",
     "nyc": "^11.0.2",
     "uuid": "^3.0.1"

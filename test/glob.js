@@ -7,11 +7,7 @@ test('accept a glob for files parameters', async(t) => {
     error,
     stderr,
     stdout
-  } = await cli(
-    [
-      'test/fixtures/{a,b}.css'
-    ]
-  );
+  } = await cli(['test/fixtures/{a,b}.css']);
 
   t.ifError(error, stderr);
   t.is(
@@ -25,11 +21,7 @@ test('ignore non matching globs', async(t) => {
     error,
     stderr,
     stdout
-  } = await cli(
-    [
-      'test/fixtures/{a,b}.css', 'test/fixtures/{x,z}.css'
-    ]
-  );
+  } = await cli(['test/fixtures/{a,b}.css', 'test/fixtures/{x,z}.css']);
 
   t.ifError(error, stderr);
   t.is(

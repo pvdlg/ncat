@@ -1,5 +1,6 @@
 import test from 'ava';
 import cli from './helpers/cli';
+const {version} = require('./../package');
 
 test('--help', async(t) => {
   const {
@@ -7,11 +8,7 @@ test('--help', async(t) => {
     error,
     stderr,
     stdout
-  } = await cli(
-    [
-      '-h'
-    ]
-  );
+  } = await cli(['-h']);
 
   t.ifError(error, stderr);
   t.is(code, 0, 'expected zero return code');
@@ -26,13 +23,9 @@ test('--version', async(t) => {
     error,
     stderr,
     stdout
-  } = await cli(
-    [
-      '--version'
-    ]
-  );
+  } = await cli(['--version']);
 
   t.ifError(error, stderr);
   t.is(code, 0, 'expected zero return code');
-  t.is(stdout, `${require('./../package').version}\n`);
+  t.is(stdout, `${version}\n`);
 });

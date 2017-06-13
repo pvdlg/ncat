@@ -8,12 +8,9 @@ test('--output works', async(t) => {
   const {
     error,
     stderr
-  } = await cli(
-    [
-      'test/fixtures/a.css', 'test/fixtures/b.css',
-      '-o', output
-    ]
-  );
+  } = await cli([
+      'test/fixtures/a.css', 'test/fixtures/b.css', '-o', output
+    ]);
 
   t.ifError(error, stderr);
   t.is(

@@ -9,13 +9,9 @@ test('--banner works with default banner', async(t) => {
   const {
     error,
     stderr
-  } = await cli(
-    [
-      'test/fixtures/a.css', 'test/fixtures/b.css',
-      '-b',
-      '-o', output
-    ]
-  );
+  } = await cli([
+      'test/fixtures/a.css', 'test/fixtures/b.css', '-b', '-o', output
+    ]);
 
   t.ifError(error, stderr);
   t.is(
@@ -29,13 +25,9 @@ test('--banner works with custom banner', async(t) => {
   const {
     error,
     stderr
-  } = await cli(
-    [
-      'test/fixtures/a.css', 'test/fixtures/b.css',
-      '-b', 'test/fixtures/banner.js',
-      '-o', output
-    ]
-  );
+  } = await cli([
+      'test/fixtures/a.css', 'test/fixtures/b.css', '-b', 'test/fixtures/banner.js', '-o', output
+    ]);
 
   t.ifError(error, stderr);
   t.is(
@@ -45,14 +37,7 @@ test('--banner works with custom banner', async(t) => {
 });
 
 test('--banner works with one file', async(t) => {
-  const {
-    code
-  } = await cli(
-    [
-      'test/fixtures/a.css',
-      '-b'
-    ]
-  );
+  const {code} = await cli(['test/fixtures/a.css', '-b']);
 
   t.is(code, 0, 'expected zero return code');
 });
@@ -62,14 +47,7 @@ test('--banner works with empty package.json', async(t) => {
     error,
     stderr,
     stdout
-  } = await cli(
-    [
-      '-',
-      '-b'
-    ],
-    fs.createReadStream('test/fixtures/b.css'),
-    'test/fixtures/empty-package'
-  );
+  } = await cli(['-', '-b'], fs.createReadStream('test/fixtures/b.css'), 'test/fixtures/empty-package');
 
   t.ifError(error, stderr);
   t.is(
@@ -83,14 +61,7 @@ test('--banner works with package.json with only name', async(t) => {
     error,
     stderr,
     stdout
-  } = await cli(
-    [
-      '-',
-      '-b'
-    ],
-    fs.createReadStream('test/fixtures/b.css'),
-    'test/fixtures/package-with-name'
-  );
+  } = await cli(['-', '-b'], fs.createReadStream('test/fixtures/b.css'), 'test/fixtures/package-with-name');
 
   t.ifError(error, stderr);
   t.is(

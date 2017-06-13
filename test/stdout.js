@@ -7,11 +7,7 @@ test('writes to stdout', async(t) => {
     error,
     stderr,
     stdout
-  } = await cli(
-    [
-      'test/fixtures/a.css', 'test/fixtures/b.css'
-    ]
-  );
+  } = await cli(['test/fixtures/a.css', 'test/fixtures/b.css']);
 
   t.ifError(error, stderr);
   t.is(

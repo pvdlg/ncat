@@ -24,9 +24,7 @@ export default function cli(args, stdinStream, cwd) {
   return new Promise((resolve) => {
     const cp = execFile(
       path.resolve('bin/ncat'),
-      args, {
-        cwd
-      },
+      args, {cwd},
       (err, stdout, stderr) => {
         resolve({
           code: err && err.code ? err.code : 0,

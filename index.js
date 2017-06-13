@@ -22,18 +22,17 @@ const LOGGERS = {
 const DEFAULT_BANNER = (pkg) =>
   `/*!
  * ${pkg.name ? pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) : 'unknown'} v${
-   pkg.version || '0.0.0'}${pkg.homepage || pkg.name ? `\n * ${
-     pkg.homepage || `https://npm.com/${pkg.name}`}` : ''}
+  pkg.version || '0.0.0'}${pkg.homepage || pkg.name ? `\n * ${pkg.homepage || `https://npm.com/${pkg.name}`}` : ''}
  *
  * Copyright (c) ${new Date().getFullYear()}${pkg.author && pkg.author.name ? ` ${pkg.author.name}` : ''}
  *${pkg.license ? ` Licensed under the ${pkg.license} license\n *` : ''}/\n`;
 
 yargonaut.helpStyle('bold.green').errorsStyle('red');
 
-const argv = yargs.usage(
-    `${chalk.bold.green('Usage:')}
+const {argv} = yargs.usage(
+  `${chalk.bold.green('Usage:')}
   ncat [<FILES ...>] [OPTIONS] [-o|--output <OUTPUT_FILE>]`
-  )
+)
   .option('o', {
     alias: 'output',
     desc: 'Output file',
@@ -75,9 +74,7 @@ If -o is not passed, the sourcemap is disabled and it writes to stdout.`
   .help('h')
   .alias('h', 'help')
   .version()
-  .alias('v', 'version')
-  .argv;
-
+  .alias('v', 'version');
 const concatFiles =
   new Concat(argv.output !== undefined && argv.output !== null && argv.map, argv.output || '', '\n');
 
@@ -85,7 +82,7 @@ if (typeof argv.banner !== 'undefined') {
   const pkg = readPkg.sync();
 
   if (argv.banner) {
-    concatFiles.add(null, require(`${process.cwd()}/${argv.banner}`));
+    concatFiles.add(null, require(`${process.cwd()}/${argv.banner}`)); // eslint-disable-line global-require
     log(LOGGERS.ADD, `Add banner from ${argv.banner}`);
   } else {
     concatFiles.add(null, DEFAULT_BANNER(pkg.pkg));
@@ -98,9 +95,7 @@ argv._.forEach((file) => {
   if (file === '-') {
     files.push(file);
   } else {
-    files.push(...glob.sync(file, {
-      nodir: true
-    }));
+    files.push(...glob.sync(file, {nodir: true}));
   }
 });
 
@@ -145,9 +140,8 @@ async.eachSeries(files, (filename, cb) => {
           } else {
             log(LOGGERS.ADD, `Add: ${filename}`);
             concatFiles.add(path.relative(path.dirname(argv.output), filename),
-              removeMapURL(content.toString()), argv['map-embed'] ? {
-                sourcesContent: [removeMapURL(content.toString())]
-              } : undefined);
+              removeMapURL(content.toString()),
+              argv['map-embed'] ? {sourcesContent: [removeMapURL(content.toString())]} : undefined);
           }
           if (readMapErr) {
             log(LOGGERS.WARN,
@@ -169,18 +163,18 @@ async.eachSeries(files, (filename, cb) => {
     process.exit(1);
   }
   if (argv.footer) {
-    concatFiles.add(null, require(`${process.cwd()}/${argv.footer}`));
+    concatFiles.add(null, require(`${process.cwd()}/${argv.footer}`)); // eslint-disable-line global-require
     log(LOGGERS.ADD, `Add footer from ${argv.banner}`);
   }
   output();
 });
 
- /**
-  * Removes the sourceMappingURL comment in code and eventual double new line character.
-  *
-  * @param  {String}     code the code to modify
-  * @return {String}          the modified code
-  */
+/**
+* Removes the sourceMappingURL comment in code and eventual double new line character.
+*
+* @param  {String}     code the code to modify
+* @return {String}          the modified code
+*/
 function removeMapURL(code) {
   return sourceMappingURL.removeFrom(code).replace(/\n\n$/, '\n');
 }
@@ -193,10 +187,11 @@ function output() {
   if (argv.output) {
     async.each([{
       path: argv.output,
-      content: argv.map ? Buffer.concat([concatFiles.content, new Buffer(
-        `\n/*# sourceMappingURL=${path.basename(argv.output)}.map */`
-      )]) : concatFiles.content
-    }, argv.map ? {
+      content: argv.map ? Buffer.concat(
+        [concatFiles.content, Buffer.from(`\n/*# sourceMappingURL=${path.basename(argv.output)}.map */`)]
+      ) : concatFiles.content
+    },
+    argv.map ? {
       path: `${argv.output}.map`,
       content: concatFiles.sourceMap
     } : null], (file, cb) => {

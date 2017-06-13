@@ -9,13 +9,9 @@ test('concatenate stdin', async(t) => {
   const {
     error,
     stderr
-  } = await cli(
-    [
-      'test/fixtures/a.css', '-',
-      '-o', output
-    ],
-    fs.createReadStream('test/fixtures/b.css')
-  );
+  } = await cli([
+      'test/fixtures/a.css', '-', '-o', output
+    ], fs.createReadStream('test/fixtures/b.css'));
 
   t.ifError(error, stderr);
   t.is(
