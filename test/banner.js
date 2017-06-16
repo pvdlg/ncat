@@ -3,6 +3,7 @@ import fs from 'fs-extra';
 import cli from './helpers/cli';
 import tmp from './helpers/tmp';
 import read from './helpers/read';
+const {pkg} = require('read-pkg-up').sync();
 
 test('--banner works with default banner', async(t) => {
   const output = tmp('output.css');
@@ -16,8 +17,9 @@ test('--banner works with default banner', async(t) => {
   t.ifError(error, stderr);
   t.is(
     await read(output),
-    (await read('test/fixtures/expected/ab-header.css')).replace('<% year %>', new Date().getFullYear())
-  );
+    (await read('test/fixtures/expected/ab-header.css'))
+      .replace('<% year %>', new Date().getFullYear())
+      .replace('<% version %>', pkg.version));
 });
 
 test('--banner works with custom banner', async(t) => {
@@ -32,8 +34,9 @@ test('--banner works with custom banner', async(t) => {
   t.ifError(error, stderr);
   t.is(
     await read(output),
-    (await read('test/fixtures/expected/ab-header.css')).replace('<% year %>', new Date().getFullYear())
-  );
+    (await read('test/fixtures/expected/ab-header.css'))
+      .replace('<% year %>', new Date().getFullYear())
+      .replace('<% version %>', pkg.version));
 });
 
 test('--banner works with one file', async(t) => {
@@ -52,8 +55,7 @@ test('--banner works with empty package.json', async(t) => {
   t.ifError(error, stderr);
   t.is(
     stdout,
-    (await read('test/fixtures/expected/a-empty-header.css')).replace('<% year %>', new Date().getFullYear())
-  );
+    (await read('test/fixtures/expected/a-empty-header.css')).replace('<% year %>', new Date().getFullYear()));
 });
 
 test('--banner works with package.json with only name', async(t) => {
@@ -66,6 +68,5 @@ test('--banner works with package.json with only name', async(t) => {
   t.ifError(error, stderr);
   t.is(
     stdout,
-    (await read('test/fixtures/expected/a-package-name-only.css')).replace('<% year %>', new Date().getFullYear())
-  );
+    (await read('test/fixtures/expected/a-package-name-only.css')).replace('<% year %>', new Date().getFullYear()));
 });
