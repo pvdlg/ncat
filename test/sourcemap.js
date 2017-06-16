@@ -124,23 +124,6 @@ test('--map generate an external map and preserve embeded code', async(t) => {
   t.is(await read('test/fixtures/b.css'), sourceMap.sourcesContent[1]);
 });
 
-test('--map generate an external map with embeded code from original map', async(t) => {
-  const output = tmp('output.css');
-  const {
-    error,
-    stderr
-  } = await cli([
-      'test/fixtures/a-map-embed.css', 'test/fixtures/b-map-embed.css', '-b', '-m', '-o', output
-    ]);
-
-  t.ifError(error, stderr);
-  t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
-  const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
-
-  t.is(await read('test/fixtures/a.css'), sourceMap.sourcesContent[0]);
-  t.is(await read('test/fixtures/b.css'), sourceMap.sourcesContent[1]);
-});
-
 test('--map generate an external map and do not embed code if it wasn\'t embeded in original map', async(t) => {
   const output = tmp('output.css');
   const {

@@ -211,7 +211,6 @@ function handleGlob(glob) {
 
 /**
  * Update all the sources path to be relative to the file that will be written (parameter --output).
- * If map-embed parameter is set, add the content to the map sourceContent attribute.
  *
  * @param  {String}   file    path of the file being processed
  * @param  {String}   content content of the file
@@ -220,14 +219,6 @@ function handleGlob(glob) {
 function prepareMap(file, content, map) {
   map.map.sources.forEach((source, i) => {
     map.map.sources[i] = path.relative(path.dirname(argv.output), path.join(path.dirname(file), source));
-    if (argv['map-embed'] && file === path.join(path.dirname(file))) {
-      if (!map.map.sourcesContent) {
-        map.map.sourcesContent = [];
-      }
-      if (!map.map.sourcesContent[i]) {
-        map.map.sourcesContent[i] = removeMapURL(content);
-      }
-    }
   });
 }
 
@@ -238,8 +229,7 @@ function prepareMap(file, content, map) {
  * - If the file content reference a sourcemap, but it cannot be read, the sourcemap is ignore
  *   and a warning message is displayed.
  * - The sourceMap URL are removed from the file content.
- * - If a sourcemap exists, {@link prepareMap} is called to update the sources path
- *   and add the sourceContent if map-embed is set.
+ * - If a sourcemap exists, {@link prepareMap} is called to update the sources path.
  * - If no sourcemap exists, a new one is created (if map parameter is set)
  *   and the file content is added to its sourceContent attribute if the map-embed parameter is set.
  *
