@@ -1,7 +1,5 @@
 # **ncat**
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/vanduynslagerp/ncat.svg)](https://greenkeeper.io/)
-
 Node CLI to concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer.
 
 [![Travis](https://img.shields.io/travis/vanduynslagerp/ncat.svg)](https://travis-ci.org/vanduynslagerp/ncat)
@@ -12,6 +10,7 @@ Node CLI to concatenate multiple files, with their sourcemaps and optionally std
 [![npm](https://img.shields.io/npm/v/ncat.svg)](https://www.npmjs.com/package/ncat)
 [![npm](https://img.shields.io/npm/dt/ncat.svg)](https://www.npmjs.com/package/ncat)
 [![VersionEye](https://img.shields.io/versioneye/d/nodejs/ncat.svg)](https://www.versioneye.com/nodejs/ncat)
+[![Greenkeeper badge](https://badges.greenkeeper.io/vanduynslagerp/ncat.svg)](https://greenkeeper.io/)
 [![license](https://img.shields.io/github/license/vanduynslagerp/ncat.svg)](https://github.com/vanduynslagerp/ncat/blob/master/LICENSE)
 
 ## Installation
