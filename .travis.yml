@@ -7,6 +7,10 @@ node_js:
 os:
   - linux
   - osx
+branches:
+  only:
+    - master
+    - /^greenkeeper.*$/
 git:
   depth: 3
 cache:
