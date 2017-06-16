@@ -37,7 +37,7 @@ test('non-existing files', async(t) => {
 test('Unredeable file', async(t) => {
   const output = tmp('unreadeable.css');
 
-  fs.outputFileSync(output, 'empty', {encoding: 'utf8'});
+  await fs.outputFile(output, 'empty', {encoding: 'utf8'});
   chmod(output, {read: false});
   const {
     err,
@@ -51,7 +51,7 @@ test('Unredeable file', async(t) => {
 test('Unwriteable output', async(t) => {
   const output = tmp('unwriteable');
 
-  fs.mkdirpSync(output);
+  await fs.mkdirp(output);
   chmod(output, {write: false});
   const {
     err,
@@ -67,7 +67,7 @@ test('Unwriteable output', async(t) => {
 test('Outout as a directory', async(t) => {
   const output = tmp('dir');
 
-  fs.mkdirpSync(output);
+  await fs.mkdirp(output);
   const {
     err,
     code

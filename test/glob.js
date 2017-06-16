@@ -12,7 +12,21 @@ test('accept a glob for files parameters', async(t) => {
   t.ifError(error, stderr);
   t.is(
     stdout,
-    await read('test/fixtures/ab.css')
+    await read('test/fixtures/expected/ab.css')
+  );
+});
+
+test('accept a glob for files parameters with negated pattern', async(t) => {
+  const {
+    error,
+    stderr,
+    stdout
+  } = await cli(['test/fixtures/{a,b,ab}.css !test/fixtures/ab.css']);
+
+  t.ifError(error, stderr);
+  t.is(
+    stdout,
+    await read('test/fixtures/expected/ab.css')
   );
 });
 
@@ -26,6 +40,6 @@ test('ignore non matching globs', async(t) => {
   t.ifError(error, stderr);
   t.is(
     stdout,
-    await read('test/fixtures/ab.css')
+    await read('test/fixtures/expected/ab.css')
   );
 });

@@ -1,23 +1,25 @@
 #!/usr/bin/env node
-const path = require('path');
-const fs = require('fs-extra');
-const Concat = require('concat-with-sourcemaps');
-const async = require('async');
-const getStdin = require('get-stdin');
-const sourceMappingURL = require('source-map-url');
-const sourceMapResolve = require('source-map-resolve');
-const readPkg = require('read-pkg-up');
-const glob = require('glob');
-const yargonaut = require('yargonaut');
-const yargs = require('yargs');
 
+import path from 'path';
+import fs from 'fs-extra';
+import pify from 'pify';
+import Concat from 'concat-with-sourcemaps';
+import getStdin from 'get-stdin';
+import sourceMappingURL from 'source-map-url';
+import sourceMapResolve from 'source-map-resolve';
+import readPkg from 'read-pkg-up';
+import globby from 'globby';
+import yargonaut from 'yargonaut';
+import yargs from 'yargs';
+
+yargonaut.helpStyle('bold.green').errorsStyle('red');
 const chalk = yargonaut.chalk();
-const LOGGERS = {
-  ADD: chalk.dim.cyan,
-  WRITE: chalk.cyan,
-  ERROR: chalk.bold.red,
-  WARN: chalk.bold.yellow
-};
+/**
+ * Produce the default banner based on package.json info.
+ *
+ * @param   {Object}   pkg the parsed package.json
+ * @returns {String}       the default banner
+ */
 const DEFAULT_BANNER = (pkg) =>
   `/*!
  * ${pkg.name ? pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) : 'unknown'} v${
@@ -25,9 +27,19 @@ const DEFAULT_BANNER = (pkg) =>
  *
  * Copyright (c) ${new Date().getFullYear()}${pkg.author && pkg.author.name ? ` ${pkg.author.name}` : ''}
  *${pkg.license ? ` Licensed under the ${pkg.license} license\n *` : ''}/\n`;
-
-yargonaut.helpStyle('bold.green').errorsStyle('red');
-
+/**
+ * Log messages.
+ *
+ * @type {Object}
+ */
+const LOG = {
+  add: (args) => `Concat file ${chalk.cyan(args[0])}`,
+  write: (args) => `Write ${chalk.bold.green(args[0])}`,
+  map: (args) => `Concat sourcemap ${chalk.cyan(args[0])}`,
+  footer: (args) => `Concat footer from ${chalk.cyan(args[0])}`,
+  banner: (args) => `Concat banner from ${chalk.cyan(args[0])}`,
+  dbanner: (args) => `Concat default banner for ${chalk.cyan(args[0])}`
+};
 const {argv} = yargs.usage(
   `${chalk.bold.green('Usage:')}
   ncat [<FILES ...>] [OPTIONS] [-o|--output <OUTPUT_FILE>]`
@@ -44,7 +56,7 @@ const {argv} = yargs.usage(
   })
   .option('e', {
     alias: 'map-embed',
-    desc: 'Embed the code in the sourcemap',
+    desc: 'Embed the code in the sourcemap (only apply to code without an existing sourcemap)',
     type: 'boolean'
   })
   .option('b', {
@@ -74,155 +86,251 @@ If -o is not passed, the sourcemap is disabled and it writes to stdout.`
   .alias('h', 'help')
   .version()
   .alias('v', 'version');
-const concatFiles =
-  new Concat(argv.output !== undefined && argv.output !== null && argv.map, argv.output || '', '\n');
+/**
+ * Concat object to wich will be added banner, footer and files and their sourcemaps.
+ * Will produce the final output.
+ *
+ * @type {Concat}
+ */
+const concat = new Concat(
+  argv.output !== undefined && argv.output !== null && argv.map,
+  argv.output ? path.basename(argv.output) : '',
+  '\n');
+/**
+ * Cache the content of stdin the first it's retrieve.
+ * Allow to concatenate the content of stdin multiple times.
+ *
+ * @type {String}
+ */
+const stdinCache = stdinCache || getStdin.buffer();
 
-if (typeof argv.banner !== 'undefined') {
-  const pkg = readPkg.sync();
-
-  if (argv.banner) {
-    concatFiles.add(null, require(`${process.cwd()}/${argv.banner}`)); // eslint-disable-line global-require
-    log(LOGGERS.ADD, `Add banner from ${argv.banner}`);
-  } else {
-    concatFiles.add(null, DEFAULT_BANNER(pkg.pkg));
-    log(LOGGERS.ADD, `Add banner for ${pkg.path}`);
-  }
-}
-const files = [];
-
-argv._.forEach((file) => {
-  if (file === '-') {
-    files.push(file);
-  } else {
-    files.push(...glob.sync(file, {nodir: true}));
-  }
-});
-
-if (files.length < 2 && typeof argv.banner === 'undefined' && !argv.footer ||
-  files.length < 1 && (typeof argv.banner === 'undefined' || !argv.footer)) {
-  console.error(LOGGERS.ERROR('Require at least 2 file, banner or footer to concatenate.\n'));
-  yargs.showHelp();
-  process.exit(1);
-}
-
-async.eachSeries(files, (filename, cb) => {
-  if (filename === '-') {
-    getStdin.buffer().then((stdin) => {
-      log(LOGGERS.ADD, 'Add stdin');
-      concatFiles.add(null, stdin);
-      cb();
-    });
-  } else {
-    fs.readFile(filename, (err, content) => {
-      if (err) {
-        cb(err);
-      } else if (argv.map && argv.output) {
-        sourceMapResolve.resolveSourceMap(content.toString(), filename, fs.readFile, (readMapErr,
-          result) => {
-          if (result && !readMapErr) {
-            log(LOGGERS.ADD, `Add: ${filename}`);
-            log(LOGGERS.ADD, `Add sourcemap: ${result.url}`);
-            result.map.sources.forEach((source, i) => {
-              result.map.sources[i] = path.relative(path.dirname(argv.output), path.join(path.dirname(
-                filename), source));
-              if (argv['map-embed']) {
-                if (!result.map.sourcesContent) {
-                  result.map.sourcesContent = [];
-                }
-                if (!result.map.sourcesContent[i]) {
-                  result.map.sourcesContent[i] = removeMapURL(content.toString());
-                }
-              }
-            });
-            concatFiles.add(path.relative(path.dirname(argv.output), filename),
-              removeMapURL(content.toString()), result.map);
-          } else {
-            log(LOGGERS.ADD, `Add: ${filename}`);
-            concatFiles.add(path.relative(path.dirname(argv.output), filename),
-              removeMapURL(content.toString()),
-              argv['map-embed'] ? {sourcesContent: [removeMapURL(content.toString())]} : undefined);
-          }
-          if (readMapErr) {
-            log(LOGGERS.WARN,
-              `The sourcemap ${readMapErr.path} referenced in ${filename} cannot be read and will be ignored`
-            );
-          }
-          cb();
-        });
-      } else {
-        log(LOGGERS.ADD, `Add: ${filename}`);
-        concatFiles.add(filename, removeMapURL(content.toString()));
-        cb();
-      }
-    });
-  }
-}, (readErr) => {
-  if (readErr) {
-    console.trace(readErr);
+concatBanner()
+  .then(() => concatFiles())
+  .then(() => concatFooter())
+  .then(() => output())
+  .then(() => {
+    process.exit();
+  })
+  .catch((error) => {
+    console.error(error);
     process.exit(1);
+  });
+
+/**
+ * Concatenate a default or custom banner.
+ *
+ * @return {Promise<Any>} Promise that resolve once the banner has been generated and concatenated
+ */
+function concatBanner() {
+  if (typeof argv.banner !== 'undefined') {
+    if (argv.banner) {
+      return Promise.resolve().then(() => {
+        // eslint-disable-next-line global-require
+        concat.add(null, require(`${process.cwd()}/${argv.banner}`));
+        log('banner', argv.banner);
+      });
+    } else {
+      return readPkg().then((pkg) => {
+        concat.add(null, DEFAULT_BANNER(pkg.pkg));
+        log('dbanner', pkg.path);
+      });
+    }
   }
+  return Promise.resolve();
+}
+
+/**
+ * Concatenate a custom banner.
+ *
+ * @return {Promise<Any>} Promise that resolve once the footer has been generated and concatenated
+ */
+function concatFooter() {
   if (argv.footer) {
-    concatFiles.add(null, require(`${process.cwd()}/${argv.footer}`)); // eslint-disable-line global-require
-    log(LOGGERS.ADD, `Add footer from ${argv.banner}`);
+    return Promise.resolve().then(() => {
+      // eslint-disable-next-line global-require
+      concat.add(null, require(`${process.cwd()}/${argv.footer}`));
+      log('footer', `Concat footer from ${argv.footer}`);
+    });
   }
-  output();
-});
+  return Promise.resolve();
+}
+
+/**
+ * Concatenate the files in order.
+ * Exit process with error if there is less than two files, banner or footer to concatenate.
+ *
+ * @return {Promise<Any>} Promise that resolve once the files have been read/created and concatenated
+ */
+function concatFiles() {
+  return Promise.all(argv._.map(handleGlob)).then(
+    (globs) => {
+      const files = globs.reduce((acc, cur) => acc.concat(cur), []);
+
+      if (files.length < 2 && typeof argv.banner === 'undefined' && !argv.footer ||
+        files.length < 1 && (typeof argv.banner === 'undefined' || !argv.footer)) {
+        console.error(chalk.bold.red('Require at least 2 file, banner or footer to concatenate.\n'));
+        yargs.showHelp();
+        process.exit(1);
+      }
+      return files.forEach((file) => {
+        concat.add(file.file, file.content, file.map);
+      });
+    }
+  );
+}
+
+/**
+ * FileToConcat describe the filename, content and sourcemap to concatenate.
+ *
+ * @typedef  {Object}        FileToConcat
+ * @property {String}        file
+ * @property {String}        content
+ * @property {Object}     sourcemap
+ */
+
+/**
+ * Retrieve files matched by the gloc and call {@link handleFile} for each one found.
+ * If the glob is '-' return one FileToConcat with stdin as its content.
+ *
+ * @param  {String}                   glob the glob expression for which to retrive files
+ * @return {Promise<FileToConcat[]>}       a Promise that resolve to an Array of FileToConcat
+ */
+function handleGlob(glob) {
+  if (glob === '-') {
+    return stdinCache
+      .then((stdin) => [{
+        file: '-',
+        content: stdin
+      }]);
+  } else {
+    return globby(glob.split(' '), {nodir: true}).then(
+      (files) => Promise.all(files.map(handleFile))
+    );
+  }
+}
+
+/**
+ * Update all the sources path to be relative to the file that will be written (parameter --output).
+ * If map-embed parameter is set, add the content to the map sourceContent attribute.
+ *
+ * @param  {String}   file    path of the file being processed
+ * @param  {String}   content content of the file
+ * @param  {Object}   map     existing sourcemap associated with the file
+ */
+function prepareMap(file, content, map) {
+  map.map.sources.forEach((source, i) => {
+    map.map.sources[i] = path.relative(path.dirname(argv.output), path.join(path.dirname(file), source));
+    if (argv['map-embed'] && file === path.join(path.dirname(file))) {
+      if (!map.map.sourcesContent) {
+        map.map.sourcesContent = [];
+      }
+      if (!map.map.sourcesContent[i]) {
+        map.map.sourcesContent[i] = removeMapURL(content);
+      }
+    }
+  });
+}
+
+/**
+ * Read a file to concatenate then, if the file content reference a sourcemap, read the sourcemap and
+ * returns a FileToConcat with the retrieve filename, content and sourcemap.
+ * In addition:
+ * - If the file content reference a sourcemap, but it cannot be read, the sourcemap is ignore
+ *   and a warning message is displayed.
+ * - The sourceMap URL are removed from the file content.
+ * - If a sourcemap exists, {@link prepareMap} is called to update the sources path
+ *   and add the sourceContent if map-embed is set.
+ * - If no sourcemap exists, a new one is created (if map parameter is set)
+ *   and the file content is added to its sourceContent attribute if the map-embed parameter is set.
+ *
+ * @param  {String}                 file path of the file to concat
+ * @return {Promise<FileToConcat>}       A Promise that resolve to a FileToConcat with
+ *                                       filename, content and sourcemap to concatenate
+ */
+function handleFile(file) {
+  if (argv.map && argv.output) {
+    return fs.readFile(file)
+      .then((content) => pify(sourceMapResolve.resolveSourceMap)(content.toString(), file, fs.readFile)
+        .then((map) => {
+          if (map) {
+            prepareMap(file, content, map);
+            log('add', file);
+            log('map', map.url);
+            return {
+              file: path.relative(path.dirname(argv.output), file),
+              content: removeMapURL(content),
+              map: map.map
+            };
+          }
+          return null;
+        }).catch((readMapErr) => {
+          console.log(chalk.bold.yellow(
+            `The sourcemap ${readMapErr.path} referenced in ${file} cannot be read and will be ignored`));
+        })
+        .then((result) => {
+          if (!result) {
+            log('add', file);
+            return {
+              file: path.relative(path.dirname(argv.output), file),
+              content: removeMapURL(content),
+              map: argv['map-embed'] ? {sourcesContent: [removeMapURL(content)]} : undefined
+            };
+          }
+          return result;
+        })
+      );
+  } else {
+    return fs.readFile(file).then((content) => {
+      log('add', file);
+      return {
+        file,
+        content: removeMapURL(content)
+      };
+    });
+  }
+}
+
+/**
+ * If --output is set, write the concatenated file to disk.
+ * If --map is also is set, write the concatenated sourcemap file to disk.
+ * If --output is not set, output concatenated to stdout.
+ *
+ * @return {Promise<Any>} Promise that resolves when the file(s) are written.
+ */
+function output() {
+  if (argv.output) {
+    return Promise.all([fs.outputFile(argv.output, argv.map ? Buffer.concat(
+      [concat.content, Buffer.from(`\n/*# sourceMappingURL=${path.basename(argv.output)}.map */`)]
+    ) : concat.content).then(() => {
+      log('write', argv.output);
+    }),
+    argv.map ? fs.outputFile(`${argv.output}.map`, concat.sourceMap).then(() => {
+      log('write', `${argv.output}.map`);
+    }) : undefined]);
+  } else {
+    process.stdout.write(concat.content);
+    return Promise.resolve();
+  }
+}
 
 /**
 * Removes the sourceMappingURL comment in code and eventual double new line character.
 *
-* @param  {String}     code the code to modify
-* @return {String}          the modified code
+* @param  {Buffer}  code the code to modify
+* @return {String}       the modified code
 */
 function removeMapURL(code) {
-  return sourceMappingURL.removeFrom(code).replace(/\n\n$/, '\n');
-}
-
-/**
- * Write the output to he file passed in --output or to the stdout if not set.
- * Also write the sourcemap file if both --map and --output are set.
- */
-function output() {
-  if (argv.output) {
-    async.each([{
-      path: argv.output,
-      content: argv.map ? Buffer.concat(
-        [concatFiles.content, Buffer.from(`\n/*# sourceMappingURL=${path.basename(argv.output)}.map */`)]
-      ) : concatFiles.content
-    },
-    argv.map ? {
-      path: `${argv.output}.map`,
-      content: concatFiles.sourceMap
-    } : null], (file, cb) => {
-      if (file) {
-        fs.outputFile(file.path, file.content, (err) => {
-          if (!err) {
-            log(LOGGERS.WRITE, `Write: ${file.path}`);
-          }
-          cb(err);
-        });
-      }
-    }, (writeErr) => {
-      if (writeErr) {
-        console.trace(writeErr);
-        process.exit(1);
-      }
-      process.exit(0);
-    });
-  } else {
-    process.stdout.write(concatFiles.content);
-    process.exit(0);
-  }
+  return sourceMappingURL.removeFrom(code.toString()).replace(/\n\n$/, '\n');
 }
 
 /**
  * Log to the console, only if --output is set.
  *
- * @param  {Function} logger Chalk logger
- * @param  {String}   msg    Message to log
+ * @param  {String}       type   Type of log (add, write, map, footer, banner, dbanner)
+ * @param  {...String}    msg    Value to interpolate
  */
-function log(logger, msg) {
+function log(type, ...rest) {
   if (argv.output) {
-    console.log(logger(msg));
+    console.log(LOG[type](rest));
   }
 }

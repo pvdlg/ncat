@@ -16,7 +16,7 @@ test('--banner works with default banner', async(t) => {
   t.ifError(error, stderr);
   t.is(
     await read(output),
-    (await read('test/fixtures/ab-header.css')).replace('<% year %>', new Date().getFullYear())
+    (await read('test/fixtures/expected/ab-header.css')).replace('<% year %>', new Date().getFullYear())
   );
 });
 
@@ -32,7 +32,7 @@ test('--banner works with custom banner', async(t) => {
   t.ifError(error, stderr);
   t.is(
     await read(output),
-    (await read('test/fixtures/ab-header.css')).replace('<% year %>', new Date().getFullYear())
+    (await read('test/fixtures/expected/ab-header.css')).replace('<% year %>', new Date().getFullYear())
   );
 });
 
@@ -52,7 +52,7 @@ test('--banner works with empty package.json', async(t) => {
   t.ifError(error, stderr);
   t.is(
     stdout,
-    (await read('test/fixtures/a-empty-header.css')).replace('<% year %>', new Date().getFullYear())
+    (await read('test/fixtures/expected/a-empty-header.css')).replace('<% year %>', new Date().getFullYear())
   );
 });
 
@@ -66,6 +66,6 @@ test('--banner works with package.json with only name', async(t) => {
   t.ifError(error, stderr);
   t.is(
     stdout,
-    (await read('test/fixtures/a-package-name-only.css')).replace('<% year %>', new Date().getFullYear())
+    (await read('test/fixtures/expected/a-package-name-only.css')).replace('<% year %>', new Date().getFullYear())
   );
 });

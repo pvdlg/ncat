@@ -29,7 +29,7 @@ $ ncat file_1.js file_2.js -o dist/bundle.js
 ```
 or a list of globs:
 ```bash
-$ ncat src/**/*.js src/**/*.jsx -o dist/bundle.js
+$ ncat 'src/**/*.js !**/rainbow.js' src/**/{cake,unicorn}.css -o dist/bundle.js
 ```
 If file is a single dash (`-`) ncat reads from the standard input:
 ```bash
@@ -46,7 +46,7 @@ $ ncat file_1.js file_2.js | uglifyjs > dist/bundle.min.js
 |:---|:--:|:-----:|:----------|
 |`-o, --output`|`{String}`|`undefined`|Output File|
 |`-m, --map`|`{Boolean}`|`false`|Create an external sourcemap (including the sourcemaps of existing files)|
-|`-e, --map-embed`|`{Boolean}`|`false`|Embed the code in the sourcemap|
+|`-e, --map-embed`|`{Boolean}`|`false`|Embed the code in the sourcemap (only apply to code without an existing sourcemap)|
 |`-b, --banner`|`{Boolean\|String}`|`false`|Add a banner built with the package.json file. Optionally pass the path to a .js file containing custom banner that can be called with `require()`|
 |`-f, --footer`|`{String}`|`undefined`|The path to .js file containing custom footer that can be called with `require()`|
 |`-h, --help`|`{Boolean}`|`false`|CLI Help|

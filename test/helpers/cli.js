@@ -4,7 +4,6 @@ import {
 } from 'child_process';
 
 /**
- * Greeting config
  * @typedef  {Object}        CliOutput
  * @property {Number}        code
  * @property {Error}         err
@@ -21,6 +20,7 @@ import {
  * @return   {Promise<CliOutput>}             A Promise that resolve to an Object with following properties
  */
 export default function cli(args, stdinStream, cwd) {
+  /* eslint-disable promise/avoid-new */
   return new Promise((resolve) => {
     const cp = execFile(
       path.resolve('bin/ncat'),

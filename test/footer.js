@@ -15,7 +15,7 @@ test('--footer works with custom footer', async(t) => {
   t.ifError(error, stderr);
   t.is(
     await read(output),
-    await read('test/fixtures/ab-footer.css')
+    await read('test/fixtures/expected/ab-footer.css')
   );
 });
 
@@ -39,6 +39,6 @@ test('--footer works with a banner and a footer', async(t) => {
   t.ifError(error, stderr);
   t.is(
     await read(output),
-    await read('test/fixtures/banner-footer.css')
+    await read('test/fixtures/expected/banner-footer.css')
   );
 });
