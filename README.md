@@ -1,5 +1,7 @@
 # **ncat**
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/vanduynslagerp/ncat.svg)](https://greenkeeper.io/)
+
 Node CLI to concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer.
 
 [![Travis](https://img.shields.io/travis/vanduynslagerp/ncat.svg)](https://travis-ci.org/vanduynslagerp/ncat)
