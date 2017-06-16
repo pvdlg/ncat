@@ -1,62 +1,72 @@
 {
   "name": "ncat",
-  "version": "1.0.0",
-  "description": "Concatenate multiple files, with their sourcemaps and optionally stdin and a banner",
-  "main": "index.js",
+  "description": "Node CLI to concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer",
+  "version": "1.0.1",
+  "author": "Pierre Vanduynslager",
   "bin": {
     "ncat": "./bin/ncat"
   },
-  "scripts": {
-    "clean": "del test/fixtures/.tmp && del coverage && del .nyc_output",
-    "lint": "eslint index.js test",
-    "pretest": "npm run lint && npm run clean",
-    "test": "nyc ava -v && nyc report --reporter=lcov",
-    "codecov": "codecov"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vanduynslagerp/ncat.git"
-  },
-  "keywords": [
-    "concatenate",
-    "cat",
-    "concat",
-    "files",
-    "sourcemap",
-    "header",
-    "banner"
-  ],
-  "author": "Pierre Vanduynslager",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/vanduynslagerp/ncat/issues"
   },
-  "files": [
-    "index.js",
-    "bin"
-  ],
-  "homepage": "https://github.com/vanduynslagerp/ncat#readme",
   "dependencies": {
-    "async": "^2.4.1",
     "chalk": "^1.1.3",
     "concat-with-sourcemaps": "^1.0.4",
+    "fs-extra": "^3.0.1",
     "get-stdin": "^5.0.1",
-    "node-glob": "^1.2.0",
+    "globby": "^6.1.0",
+    "pify": "^3.0.0",
     "read-pkg-up": "^2.0.0",
     "source-map-resolve": "^0.5.0",
     "source-map-url": "^0.4.0",
     "yargonaut": "^1.1.2",
-    "yargs": "^8.0.1"
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
+    "@metahub/eslint-config": "^1.1.0",
     "ava": "^0.19.1",
-    "babel-eslint": "^7.2.3",
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.5.2",
+    "chmod": "^0.2.1",
     "codecov": "^2.2.0",
     "del-cli": "^1.0.0",
-    "eslint": "^3.19.0",
-    "eslint-plugin-import": "^2.3.0",
-    "fs-extra": "^3.0.1",
     "nyc": "^11.0.2",
+    "randomstring": "^1.1.5",
     "uuid": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "files": [
+    "lib",
+    "bin"
+  ],
+  "homepage": "https://github.com/vanduynslagerp/ncat#readme",
+  "keywords": [
+    "banner",
+    "cat",
+    "cli",
+    "concat",
+    "concatenate",
+    "concatenation",
+    "files",
+    "footer",
+    "header",
+    "sourcemap"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vanduynslagerp/ncat.git"
+  },
+  "scripts": {
+    "clean": "del test/fixtures/.tmp && del coverage && del .nyc_output",
+    "compile": "del lib && babel src --source-maps --out-dir lib",
+    "lint": "eslint src test package.json",
+    "pretest": "npm run lint && npm run clean && npm run compile",
+    "test": "nyc ava -v && nyc report --reporter=lcov",
+    "codecov": "codecov",
+    "prepare": "npm run clean && npm run compile"
   }
 }

@@ -3,9 +3,14 @@ dist: trusty
 language: node_js
 node_js:
   - node
-  - 7
-  - 6
-  - 5
+  - 4
+os:
+  - linux
+  - osx
+branches:
+  only:
+    - master
+    - /^greenkeeper.*$/
 git:
   depth: 3
 cache:
@@ -13,6 +18,8 @@ cache:
 env:
   global:
     - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
+before_install:
+  - if [[ `npm -v` == 2* ]]; then npm install -g npm@3; fi
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
@@ -20,5 +27,5 @@ script:
   - npm run test
 after_success:
   - echo $TRAVIS_PULL_REQUEST
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -d; fi
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ -n "${CC_TEST_REPORTER_ID:-}" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -d; fi
   - if [ -n "${CODECOV_TOKEN:-}" ]; then npm run codecov; fi

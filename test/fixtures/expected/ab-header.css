@@ -1,0 +1,15 @@
+/*!
+ * Ncat v<% version %>
+ * https://github.com/vanduynslagerp/ncat#readme
+ *
+ * Copyright (c) <% year %> Pierre Vanduynslager
+ * Licensed under the MIT license
+ */
+
+.a {
+  color: red;
+}
+
+.b {
+  color: blue;
+}

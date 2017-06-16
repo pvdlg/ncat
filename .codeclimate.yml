@@ -12,6 +12,6 @@ engines:
         - javascript
 ratings:
    paths:
-   - index.js
+   - src/index.js
    - test/*.js
    - test/helpers/*.js
