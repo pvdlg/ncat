@@ -19,12 +19,17 @@ env:
   global:
     - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
 before_install:
+  - if [[ `npm -v` != 2* ]]; then npm install -g npm; fi
   - if [[ `npm -v` == 2* ]]; then npm install -g npm@3; fi
+  - npm install -g greenkeeper-lockfile@1
 before_script:
+  - greenkeeper-lockfile-update
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
 script:
   - npm run test
+after_script:
+  - greenkeeper-lockfile-upload
 after_success:
   - echo $TRAVIS_PULL_REQUEST
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ -n "${CC_TEST_REPORTER_ID:-}" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -d; fi
