@@ -3,9 +3,6 @@ engines:
     enabled: true
     config:
       config: .eslintrc.js
-      extensions:
-        - .js
-        - .json
   duplication:
     enabled: true
     exclude_paths:
