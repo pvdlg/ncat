@@ -4,7 +4,7 @@ import cli from './helpers/cli';
 import tmp from './helpers/tmp';
 import read from './helpers/read';
 
-test('--map generate an external map', async(t) => {
+test('--map generate an external map (css)', async(t) => {
   const output = tmp('output.css');
   const {
     error,
@@ -16,10 +16,28 @@ test('--map generate an external map', async(t) => {
   t.ifError(error, stderr);
 
   t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
-  t.regex(await read(output), /\/*# sourceMappingURL=output.css.map/);
+  t.regex(await read(output), /\/\*# sourceMappingURL=output\.css\.map \*\//);
   const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
   t.is(sourceMap.file, 'output.css');
+});
+
+test('--map generate an external map (js)', async(t) => {
+  const output = tmp('output.js');
+  const {
+    error,
+    stderr
+  } = await cli([
+      'test/fixtures/a.js', 'test/fixtures/b.js', '-m', '-o', output
+    ]);
+
+  t.ifError(error, stderr);
+
+  t.truthy(await fs.pathExists(output.replace('.js', '.js.map')));
+  t.regex(await read(output), /\/\/# sourceMappingURL=output\.js\.map/);
+  const sourceMap = JSON.parse(await read(output.replace('.js', '.js.map')));
+
+  t.is(sourceMap.file, 'output.js');
 });
 
 test('withouy --map do not generate an external map', async(t) => {

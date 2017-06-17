@@ -31,6 +31,5 @@ script:
 after_script:
   - greenkeeper-lockfile-upload
 after_success:
-  - echo $TRAVIS_PULL_REQUEST
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ -n "${CC_TEST_REPORTER_ID:-}" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -d; fi
+  - if [ -n "${CC_TEST_REPORTER_ID:-}" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -d; fi
   - if [ -n "${CODECOV_TOKEN:-}" ]; then npm run codecov; fi
