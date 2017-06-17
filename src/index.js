@@ -196,10 +196,7 @@ function concatFiles() {
 function handleGlob(glob) {
   if (glob === '-') {
     return stdinCache
-      .then((stdin) => [{
-        file: '-',
-        content: stdin
-      }]);
+      .then((stdin) => [{content: stdin}]);
   } else {
     return globby(glob.split(' '), {nodir: true}).then(
       (files) => Promise.all(files.map(handleFile))

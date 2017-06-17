@@ -40,6 +40,24 @@ test('--map generate an external map (js)', async(t) => {
   t.is(sourceMap.file, 'output.js');
 });
 
+test('--map generate an external map ignoring stdin', async(t) => {
+  const output = tmp('output.css');
+  const {
+    error,
+    stderr
+  } = await cli([
+      'test/fixtures/a.css', '-', '-m', '-o', output
+    ], fs.createReadStream('test/fixtures/b.css'));
+
+  t.ifError(error, stderr);
+  t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
+  const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
+
+  t.is('../../a.css', sourceMap.sources[0]);
+  t.is(1, sourceMap.sources.length);
+  t.is(sourceMap.file, 'output.css');
+});
+
 test('withouy --map do not generate an external map', async(t) => {
   const output = tmp('output.css');
   const {
@@ -50,7 +68,6 @@ test('withouy --map do not generate an external map', async(t) => {
     ]);
 
   t.ifError(error, stderr);
-
   t.falsy(await fs.pathExists(output.replace('.css', '.css.map')));
   t.notRegex(await read(output), /\/*# sourceMappingURL=output.css.map/);
 });
@@ -103,8 +120,7 @@ test('--map generate an external map and include existing maps', async(t) => {
   const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
   t.is('../../a-map.css', sourceMap.sources[0]);
-  t.is('../../b-map.css', sourceMap.sources[1]
-  );
+  t.is('../../b-map.css', sourceMap.sources[1]);
 });
 
 test('--map generate an external map and include existing maps from sub-directory', async(t) => {
