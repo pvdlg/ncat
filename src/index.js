@@ -108,9 +108,7 @@ concatBanner()
   .then(() => concatFiles())
   .then(() => concatFooter())
   .then(() => output())
-  .then(() => {
-    process.exit();
-  })
+  .then(() => process.exit())
   .catch((error) => {
     console.error(error);
     process.exit(1);
@@ -127,12 +125,12 @@ function concatBanner() {
       return Promise.resolve().then(() => {
         // eslint-disable-next-line global-require
         concat.add(null, require(`${process.cwd()}/${argv.banner}`));
-        log('banner', argv.banner);
+        return log('banner', argv.banner);
       });
     } else {
       return readPkg().then((pkg) => {
         concat.add(null, DEFAULT_BANNER(pkg.pkg));
-        log('dbanner', pkg.path);
+        return log('dbanner', pkg.path);
       });
     }
   }
@@ -149,7 +147,7 @@ function concatFooter() {
     return Promise.resolve().then(() => {
       // eslint-disable-next-line global-require
       concat.add(null, require(`${process.cwd()}/${argv.footer}`));
-      log('footer', `Concat footer from ${argv.footer}`);
+      return log('footer', `Concat footer from ${argv.footer}`);
     });
   }
   return Promise.resolve();
@@ -290,17 +288,26 @@ function handleFile(file) {
 function output() {
   if (argv.output) {
     return Promise.all([fs.outputFile(argv.output, argv.map ? Buffer.concat(
-      [concat.content, Buffer.from(`\n/*# sourceMappingURL=${path.basename(argv.output)}.map */`)]
-    ) : concat.content).then(() => {
-      log('write', argv.output);
-    }),
-    argv.map ? fs.outputFile(`${argv.output}.map`, concat.sourceMap).then(() => {
-      log('write', `${argv.output}.map`);
-    }) : undefined]);
+      [concat.content, Buffer.from(getSourceMappingURL())]
+    ) : concat.content).then(() => log('write', argv.output)),
+    argv.map ? fs.outputFile(`${argv.output}.map`, concat.sourceMap).then(
+      () => log('write', `${argv.output}.map`)) : undefined]);
   } else {
     process.stdout.write(concat.content);
     return Promise.resolve();
   }
+}
+
+/**
+ * Return a source mapping URL comment based on the output file extension.
+ *
+ * @return {String} the sourceMappingURL comment
+ */
+function getSourceMappingURL() {
+  if (path.extname(argv.output) === '.css') {
+    return `\n/*# sourceMappingURL=${path.basename(argv.output)}.map */`;
+  }
+  return `\n//# sourceMappingURL=${path.basename(argv.output)}.map`;
 }
 
 /**
