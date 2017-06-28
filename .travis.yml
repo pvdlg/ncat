@@ -24,7 +24,8 @@ before_install:
   - npm install -g greenkeeper-lockfile@1
 before_script:
   - greenkeeper-lockfile-update
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 --retry 3 -o ./cc-test-reporter; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-darwin-amd64 --retry 3 -o ./cc-test-reporter; fi
   - chmod +x ./cc-test-reporter
 script:
   - npm run test
