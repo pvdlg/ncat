@@ -29,15 +29,18 @@
     "chalk": "^2.0.1",
     "chmod": "^0.2.1",
     "codecov": "^2.2.0",
-    "del-cli": "^1.0.0",
     "nyc": "^11.0.3",
     "randomstring": "^1.1.5",
+    "rimraf": "^2.6.1",
     "uuid": "^3.1.0"
   },
   "engines": {
     "node": ">=4"
   },
-  "files": ["lib", "bin"],
+  "files": [
+    "lib",
+    "bin"
+  ],
   "homepage": "https://github.com/vanduynslagerp/ncat#readme",
   "keywords": [
     "banner",
@@ -58,8 +61,8 @@
     "url": "git+https://github.com/vanduynslagerp/ncat.git"
   },
   "scripts": {
-    "clean": "del test/fixtures/.tmp && del coverage && del .nyc_output",
-    "compile": "del lib && babel src --source-maps --out-dir lib",
+    "clean": "rimraf test/fixtures/.tmp && rimraf coverage && rimraf .nyc_output",
+    "compile": "rimraf lib && babel src --source-maps --out-dir lib",
     "lint": "eslint src test package.json",
     "pretest": "npm run lint && npm run clean && npm run compile",
     "test": "nyc ava -v && nyc report --reporter=lcov",
