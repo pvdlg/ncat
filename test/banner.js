@@ -1,3 +1,4 @@
+import path from 'path';
 import test from 'ava';
 import fs from 'fs-extra';
 import cli from './helpers/cli';
@@ -7,7 +8,13 @@ const {pkg} = require('read-pkg-up').sync();
 
 test('--banner works with default banner', async(t) => {
   const output = tmp('output.css');
-  const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-b', '-o', output]);
+  const {error, stderr} = await cli([
+    path.normalize('test/fixtures/a.css'),
+    path.normalize('test/fixtures/b.css'),
+    '-b',
+    '-o',
+    output,
+  ]);
 
   t.ifError(error, stderr);
   t.is(
