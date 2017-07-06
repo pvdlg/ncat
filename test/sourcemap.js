@@ -46,7 +46,7 @@ test('--map generate an external map ignoring stdin', async(t) => {
   t.is(sourceMap.file, 'output.css');
 });
 
-test('withouy --map do not generate an external map', async(t) => {
+test('without --map do not generate an external map', async(t) => {
   const output = tmp('output.css');
   const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-o', output]);
 

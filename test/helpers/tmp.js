@@ -8,5 +8,5 @@ import uuid from 'uuid';
  * @return {String}          the path of the unique temporary file/directory
  */
 export default function tmp(filename) {
-  return path.join('test/fixtures/.tmp', uuid(), filename || '');
+  return path.posix.join('test/fixtures/.tmp', uuid(), filename || '');
 }
