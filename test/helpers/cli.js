@@ -1,7 +1,5 @@
 import path from 'path';
-import {
-  execFile
-} from 'child_process';
+import {execFile} from 'child_process';
 
 /**
  * @typedef  {Object}        CliOutput
@@ -22,17 +20,14 @@ import {
 export default function cli(args, stdinStream, cwd) {
   /* eslint-disable promise/avoid-new */
   return new Promise((resolve) => {
-    const cp = execFile(
-      path.resolve('bin/ncat'),
-      args, {cwd},
-      (err, stdout, stderr) => {
-        resolve({
-          code: err && err.code ? err.code : 0,
-          err,
-          stdout,
-          stderr
-        });
+    const cp = execFile(path.resolve('bin/ncat'), args, {cwd}, (err, stdout, stderr) => {
+      resolve({
+        code: err && err.code ? err.code : 0,
+        err,
+        stdout,
+        stderr,
       });
+    });
 
     if (stdinStream) {
       stdinStream.pipe(cp.stdin);

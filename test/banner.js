@@ -7,36 +7,35 @@ const {pkg} = require('read-pkg-up').sync();
 
 test('--banner works with default banner', async(t) => {
   const output = tmp('output.css');
-  const {
-    error,
-    stderr
-  } = await cli([
-      'test/fixtures/a.css', 'test/fixtures/b.css', '-b', '-o', output
-    ]);
+  const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-b', '-o', output]);
 
   t.ifError(error, stderr);
   t.is(
     await read(output),
     (await read('test/fixtures/expected/ab-header.css'))
       .replace('<% year %>', new Date().getFullYear())
-      .replace('<% version %>', pkg.version));
+      .replace('<% version %>', pkg.version)
+  );
 });
 
 test('--banner works with custom banner', async(t) => {
   const output = tmp('output.css');
-  const {
-    error,
-    stderr
-  } = await cli([
-      'test/fixtures/a.css', 'test/fixtures/b.css', '-b', 'test/fixtures/banner.js', '-o', output
-    ]);
+  const {error, stderr} = await cli([
+    'test/fixtures/a.css',
+    'test/fixtures/b.css',
+    '-b',
+    'test/fixtures/banner.js',
+    '-o',
+    output,
+  ]);
 
   t.ifError(error, stderr);
   t.is(
     await read(output),
     (await read('test/fixtures/expected/ab-header.css'))
       .replace('<% year %>', new Date().getFullYear())
-      .replace('<% version %>', pkg.version));
+      .replace('<% version %>', pkg.version)
+  );
 });
 
 test('--banner works with one file', async(t) => {
@@ -46,27 +45,29 @@ test('--banner works with one file', async(t) => {
 });
 
 test('--banner works with empty package.json', async(t) => {
-  const {
-    error,
-    stderr,
-    stdout
-  } = await cli(['-', '-b'], fs.createReadStream('test/fixtures/b.css'), 'test/fixtures/empty-package');
+  const {error, stderr, stdout} = await cli(
+    ['-', '-b'],
+    fs.createReadStream('test/fixtures/b.css'),
+    'test/fixtures/empty-package'
+  );
 
   t.ifError(error, stderr);
   t.is(
     stdout,
-    (await read('test/fixtures/expected/a-empty-header.css')).replace('<% year %>', new Date().getFullYear()));
+    (await read('test/fixtures/expected/a-empty-header.css')).replace('<% year %>', new Date().getFullYear())
+  );
 });
 
 test('--banner works with package.json with only name', async(t) => {
-  const {
-    error,
-    stderr,
-    stdout
-  } = await cli(['-', '-b'], fs.createReadStream('test/fixtures/b.css'), 'test/fixtures/package-with-name');
+  const {error, stderr, stdout} = await cli(
+    ['-', '-b'],
+    fs.createReadStream('test/fixtures/b.css'),
+    'test/fixtures/package-with-name'
+  );
 
   t.ifError(error, stderr);
   t.is(
     stdout,
-    (await read('test/fixtures/expected/a-package-name-only.css')).replace('<% year %>', new Date().getFullYear()));
+    (await read('test/fixtures/expected/a-package-name-only.css')).replace('<% year %>', new Date().getFullYear())
+  );
 });

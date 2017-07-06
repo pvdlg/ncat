@@ -1,6 +1,4 @@
-import {
-  readFile
-} from 'fs-extra';
+import {readFile} from 'fs-extra';
 
 /**
  * Asynchronously reads the entire contents of a file.
