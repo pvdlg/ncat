@@ -188,7 +188,7 @@ test('--map generate an external map even if a source file is refencing a non-ex
   /* eslint-disable max-len */
   t.regex(
     stdout,
-    /The sourcemap test\/fixtures\/a-missing-map.css.map referenced in test\/fixtures\/a-missing-map.css cannot be read and will be ignored/
+    /The sourcemap (.*)a-missing-map.css.map referenced in (.*)a-missing-map.css cannot be read and will be ignored/
   );
 });
 
@@ -213,6 +213,6 @@ test('--map generate an external map even if a source file is refencing a non-ex
   /* eslint-disable max-len */
   t.regex(
     stdout,
-    /The sourcemap test\/fixtures\/a-missing-map.css.map referenced in test\/fixtures\/a-missing-map.css cannot be read and will be ignored/
+    /The sourcemap (.*)a-missing-map.css.map referenced in (.*)a-missing-map.css cannot be read and will be ignored/
   );
 });

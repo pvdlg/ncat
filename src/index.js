@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// TODO reformat jsdoc
+
 import path from 'path';
 import fs from 'fs-extra';
 import pify from 'pify';
@@ -127,8 +129,8 @@ function concatBanner() {
     if (argv.banner) {
       return Promise.resolve().then(() => {
         // eslint-disable-next-line global-require
-        concat.add(null, require(`${process.cwd()}/${argv.banner}`));
-        return log('banner', argv.banner);
+        concat.add(null, require(path.join(process.cwd(), argv.banner)));
+        return log('banner', path.normalize(argv.banner));
       });
     } else {
       return readPkg().then((pkg) => {
@@ -149,8 +151,8 @@ function concatFooter() {
   if (argv.footer) {
     return Promise.resolve().then(() => {
       // eslint-disable-next-line global-require
-      concat.add(null, require(`${process.cwd()}/${argv.footer}`));
-      return log('footer', `Concat footer from ${argv.footer}`);
+      concat.add(null, require(path.join(process.cwd(), argv.footer)));
+      return log('footer', `Concat footer from ${path.normalize(argv.footer)}`);
     });
   }
   return Promise.resolve();
@@ -200,7 +202,9 @@ function handleGlob(glob) {
   if (glob === '-') {
     return stdinCache.then((stdin) => [{content: stdin}]);
   } else {
-    return globby(glob.split(' '), {nodir: true}).then((files) => Promise.all(files.map(handleFile)));
+    return globby(glob.split(' '), {nodir: true}).then((files) =>
+      Promise.all(files.map((file) => path.normalize(file)).map(handleFile))
+    );
   }
 }
 
@@ -292,15 +296,17 @@ function handleFile(file) {
  */
 function output() {
   if (argv.output) {
+    const outputPath = path.normalize(argv.output);
+
     return Promise.all([
       fs
         .outputFile(
-          argv.output,
+          outputPath,
           argv.map ? Buffer.concat([concat.content, Buffer.from(getSourceMappingURL())]) : concat.content
         )
-        .then(() => log('write', argv.output)),
+        .then(() => log('write', outputPath)),
       argv.map ?
-        fs.outputFile(`${argv.output}.map`, concat.sourceMap).then(() => log('write', `${argv.output}.map`)) :
+        fs.outputFile(`${outputPath}.map`, concat.sourceMap).then(() => log('write', `${outputPath}.map`)) :
         undefined,
     ]);
   } else {
