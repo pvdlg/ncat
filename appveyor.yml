@@ -3,9 +3,12 @@ environment:
     - nodejs_version: "4"
     - nodejs_version: "7"
 install:
-  # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
-  # install modules
+  - IF %nodejs_version% LSS 5 npm -g install npm@3
   - npm install
+platform:
+  - x86
+  - x64
 test_script:
   - npm run test
+build: off
