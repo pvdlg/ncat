@@ -1,0 +1,11 @@
+environment:
+  matrix:
+    - nodejs_version: "4"
+    - nodejs_version: "7"
+install:
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+  # install modules
+  - npm install
+test_script:
+  - npm run test
