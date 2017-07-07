@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// TODO reformat jsdoc
+
 import path from 'path';
 import fs from 'fs-extra';
 import pify from 'pify';
@@ -22,8 +24,8 @@ const chalk = yargonaut.chalk();
  */
 const DEFAULT_BANNER = (pkg) =>
   `/*!
- * ${pkg.name ? pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) : 'unknown'} v${
-  pkg.version || '0.0.0'}${pkg.homepage || pkg.name ? `\n * ${pkg.homepage || `https://npm.com/${pkg.name}`}` : ''}
+ * ${pkg.name ? pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) : 'unknown'} v${pkg.version ||
+    '0.0.0'}${pkg.homepage || pkg.name ? `\n * ${pkg.homepage || `https://npm.com/${pkg.name}`}` : ''}
  *
  * Copyright (c) ${new Date().getFullYear()}${pkg.author && pkg.author.name ? ` ${pkg.author.name}` : ''}
  *${pkg.license ? ` Licensed under the ${pkg.license} license\n *` : ''}/\n`;
@@ -36,46 +38,48 @@ const LOG = {
   add: (args) => `Concat file ${chalk.cyan(args[0])}`,
   write: (args) => `Write ${chalk.bold.green(args[0])}`,
   map: (args) => `Concat sourcemap ${chalk.cyan(args[0])}`,
+  mapInline: (args) => `Concat inline sourcemap from ${chalk.cyan(args[0])}`,
   footer: (args) => `Concat footer from ${chalk.cyan(args[0])}`,
   banner: (args) => `Concat banner from ${chalk.cyan(args[0])}`,
-  dbanner: (args) => `Concat default banner for ${chalk.cyan(args[0])}`
+  dbanner: (args) => `Concat default banner for ${chalk.cyan(args[0])}`,
 };
-const {argv} = yargs.usage(
-  `${chalk.bold.green('Usage:')}
+const {argv} = yargs
+  .usage(
+    `${chalk.bold.green('Usage:')}
   ncat [<FILES ...>] [OPTIONS] [-o|--output <OUTPUT_FILE>]`
-)
+  )
   .option('o', {
     alias: 'output',
     desc: 'Output file',
-    type: 'string'
+    type: 'string',
   })
   .option('m', {
     alias: 'map',
     desc: 'Create an external sourcemap (including the sourcemaps of existing files)',
-    type: 'boolean'
+    type: 'boolean',
   })
   .option('e', {
     alias: 'map-embed',
     desc: 'Embed the code in the sourcemap (only apply to code without an existing sourcemap)',
-    type: 'boolean'
+    type: 'boolean',
   })
   .option('b', {
     alias: 'banner',
-    desc:
-      `Add a banner built with the package.json file. Optionally pass the path
+    desc: `Add a banner built with the package.json file. Optionally pass the path
       to a .js file containing custom banner that can be called with 'require()'`,
-    type: 'string'
+    type: 'string',
   })
   .option('f', {
     alias: 'footer',
-    desc:
-      'The path to .js file containing custom footer that can be called with \'require()\'',
-    type: 'string'
+    desc: 'The path to .js file containing custom footer that can be called with \'require()\'',
+    type: 'string',
   })
-  .epilog(chalk.yellow(
-    `If a file is a single dash ('-'), it reads from stdin.
+  .epilog(
+    chalk.yellow(
+      `If a file is a single dash ('-'), it reads from stdin.
 If -o is not passed, the sourcemap is disabled and it writes to stdout.`
-  ))
+    )
+  )
   .example('ncat file_1.js file_2.js -o dist/bundle.js', 'Basic usage')
   .example('ncat file_1.js file_2.js -m -o dist/bundle.js', 'Basic usage with sourcemap')
   .example('cat file_1.js | ncat - input_2.js > bundle.js', 'Piping input & output')
@@ -95,7 +99,8 @@ If -o is not passed, the sourcemap is disabled and it writes to stdout.`
 const concat = new Concat(
   argv.output !== undefined && argv.output !== null && argv.map,
   argv.output ? path.basename(argv.output) : '',
-  '\n');
+  '\n'
+);
 /**
  * Cache the content of stdin the first it's retrieve.
  * Allow to concatenate the content of stdin multiple times.
@@ -124,7 +129,7 @@ function concatBanner() {
     if (argv.banner) {
       return Promise.resolve().then(() => {
         // eslint-disable-next-line global-require
-        concat.add(null, require(`${process.cwd()}/${argv.banner}`));
+        concat.add(null, require(path.join(process.cwd(), argv.banner)));
         return log('banner', argv.banner);
       });
     } else {
@@ -146,7 +151,7 @@ function concatFooter() {
   if (argv.footer) {
     return Promise.resolve().then(() => {
       // eslint-disable-next-line global-require
-      concat.add(null, require(`${process.cwd()}/${argv.footer}`));
+      concat.add(null, require(path.join(process.cwd(), argv.footer)));
       return log('footer', `Concat footer from ${argv.footer}`);
     });
   }
@@ -160,21 +165,21 @@ function concatFooter() {
  * @return {Promise<Any>} Promise that resolve once the files have been read/created and concatenated
  */
 function concatFiles() {
-  return Promise.all(argv._.map(handleGlob)).then(
-    (globs) => {
-      const files = globs.reduce((acc, cur) => acc.concat(cur), []);
+  return Promise.all(argv._.map(handleGlob)).then((globs) => {
+    const files = globs.reduce((acc, cur) => acc.concat(cur), []);
 
-      if (files.length < 2 && typeof argv.banner === 'undefined' && !argv.footer ||
-        files.length < 1 && (typeof argv.banner === 'undefined' || !argv.footer)) {
-        console.error(chalk.bold.red('Require at least 2 file, banner or footer to concatenate.\n'));
-        yargs.showHelp();
-        process.exit(1);
-      }
-      return files.forEach((file) => {
-        concat.add(file.file, file.content, file.map);
-      });
+    if (
+      files.length < 2 && typeof argv.banner === 'undefined' && !argv.footer ||
+      files.length < 1 && (typeof argv.banner === 'undefined' || !argv.footer)
+    ) {
+      console.error(chalk.bold.red('Require at least 2 file, banner or footer to concatenate.\n'));
+      yargs.showHelp();
+      process.exit(1);
     }
-  );
+    return files.forEach((file) => {
+      concat.add(file.file, file.content, file.map);
+    });
+  });
 }
 
 /**
@@ -195,12 +200,9 @@ function concatFiles() {
  */
 function handleGlob(glob) {
   if (glob === '-') {
-    return stdinCache
-      .then((stdin) => [{content: stdin}]);
+    return stdinCache.then((stdin) => [{content: stdin}]);
   } else {
-    return globby(glob.split(' '), {nodir: true}).then(
-      (files) => Promise.all(files.map(handleFile))
-    );
+    return globby(glob.split(' '), {nodir: true}).then((files) => Promise.all(files.map(handleFile)));
   }
 }
 
@@ -234,23 +236,31 @@ function prepareMap(file, content, map) {
  */
 function handleFile(file) {
   if (argv.map && argv.output) {
-    return fs.readFile(file)
-      .then((content) => pify(sourceMapResolve.resolveSourceMap)(content.toString(), file, fs.readFile)
+    return fs.readFile(file).then((content) =>
+      pify(sourceMapResolve.resolveSourceMap)(content.toString(), file, fs.readFile)
         .then((map) => {
           if (map) {
             prepareMap(file, content, map);
             log('add', file);
-            log('map', map.url);
+            if (map.url) {
+              log('map', map.url);
+            } else {
+              log('mapInline', file);
+            }
             return {
               file: path.relative(path.dirname(argv.output), file),
               content: removeMapURL(content),
-              map: map.map
+              map: map.map,
             };
           }
           return null;
-        }).catch((readMapErr) => {
-          console.log(chalk.bold.yellow(
-            `The sourcemap ${readMapErr.path} referenced in ${file} cannot be read and will be ignored`));
+        })
+        .catch((readMapErr) => {
+          console.log(
+            chalk.bold.yellow(
+              `The sourcemap ${readMapErr.path} referenced in ${file} cannot be read and will be ignored`
+            )
+          );
         })
         .then((result) => {
           if (!result) {
@@ -258,18 +268,18 @@ function handleFile(file) {
             return {
               file: path.relative(path.dirname(argv.output), file),
               content: removeMapURL(content),
-              map: argv['map-embed'] ? {sourcesContent: [removeMapURL(content)]} : undefined
+              map: argv['map-embed'] ? {sourcesContent: [removeMapURL(content)]} : undefined,
             };
           }
           return result;
         })
-      );
+    );
   } else {
     return fs.readFile(file).then((content) => {
       log('add', file);
       return {
         file,
-        content: removeMapURL(content)
+        content: removeMapURL(content),
       };
     });
   }
@@ -284,11 +294,17 @@ function handleFile(file) {
  */
 function output() {
   if (argv.output) {
-    return Promise.all([fs.outputFile(argv.output, argv.map ? Buffer.concat(
-      [concat.content, Buffer.from(getSourceMappingURL())]
-    ) : concat.content).then(() => log('write', argv.output)),
-    argv.map ? fs.outputFile(`${argv.output}.map`, concat.sourceMap).then(
-      () => log('write', `${argv.output}.map`)) : undefined]);
+    return Promise.all([
+      fs
+        .outputFile(
+          argv.output,
+          argv.map ? Buffer.concat([concat.content, Buffer.from(getSourceMappingURL())]) : concat.content
+        )
+        .then(() => log('write', argv.output)),
+      argv.map ?
+        fs.outputFile(`${argv.output}.map`, concat.sourceMap).then(() => log('write', `${argv.output}.map`)) :
+        undefined,
+    ]);
   } else {
     process.stdout.write(concat.content);
     return Promise.resolve();

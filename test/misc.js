@@ -3,12 +3,7 @@ import cli from './helpers/cli';
 const {version} = require('./../package');
 
 test('--help', async(t) => {
-  const {
-    code,
-    error,
-    stderr,
-    stdout
-  } = await cli(['-h']);
+  const {code, error, stderr, stdout} = await cli(['-h']);
 
   t.ifError(error, stderr);
   t.is(code, 0, 'expected zero return code');
@@ -18,12 +13,7 @@ test('--help', async(t) => {
 });
 
 test('--version', async(t) => {
-  const {
-    code,
-    error,
-    stderr,
-    stdout
-  } = await cli(['--version']);
+  const {code, error, stderr, stdout} = await cli(['--version']);
 
   t.ifError(error, stderr);
   t.is(code, 0, 'expected zero return code');
