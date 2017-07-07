@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-// TODO reformat jsdoc
-
 import path from 'path';
 import fs from 'fs-extra';
 import pify from 'pify';
@@ -19,8 +17,8 @@ const chalk = yargonaut.chalk();
 /**
  * Produce the default banner based on package.json info.
  *
- * @param   {Object}   pkg the parsed package.json
- * @returns {String}       the default banner
+ * @param {Object} pkg the parsed package.json.
+ * @returns {String} the default banner.
  */
 const DEFAULT_BANNER = (pkg) =>
   `/*!
@@ -122,7 +120,7 @@ concatBanner()
 /**
  * Concatenate a default or custom banner.
  *
- * @return {Promise<Any>} Promise that resolve once the banner has been generated and concatenated
+ * @return {Promise<Any>} Promise that resolve once the banner has been generated and concatenated.
  */
 function concatBanner() {
   if (typeof argv.banner !== 'undefined') {
@@ -145,7 +143,7 @@ function concatBanner() {
 /**
  * Concatenate a custom banner.
  *
- * @return {Promise<Any>} Promise that resolve once the footer has been generated and concatenated
+ * @return {Promise<Any>} Promise that resolve once the footer has been generated and concatenated.
  */
 function concatFooter() {
   if (argv.footer) {
@@ -162,7 +160,7 @@ function concatFooter() {
  * Concatenate the files in order.
  * Exit process with error if there is less than two files, banner or footer to concatenate.
  *
- * @return {Promise<Any>} Promise that resolve once the files have been read/created and concatenated
+ * @return {Promise<Any>} Promise that resolve once the files have been read/created and concatenated.
  */
 function concatFiles() {
   return Promise.all(argv._.map(handleGlob)).then((globs) => {
@@ -185,18 +183,18 @@ function concatFiles() {
 /**
  * FileToConcat describe the filename, content and sourcemap to concatenate.
  *
- * @typedef  {Object}        FileToConcat
- * @property {String}        file
- * @property {String}        content
- * @property {Object}     sourcemap
+ * @typedef {Object} FileToConcat
+ * @property {String} file
+ * @property {String} content
+ * @property {Object} sourcemap
  */
 
 /**
  * Retrieve files matched by the gloc and call {@link handleFile} for each one found.
  * If the glob is '-' return one FileToConcat with stdin as its content.
  *
- * @param  {String}                   glob the glob expression for which to retrive files
- * @return {Promise<FileToConcat[]>}       a Promise that resolve to an Array of FileToConcat
+ * @param  {String} glob the glob expression for which to retrive files.
+ * @return {Promise<FileToConcat[]>} a Promise that resolve to an Array of FileToConcat.
  */
 function handleGlob(glob) {
   if (glob === '-') {
@@ -209,9 +207,9 @@ function handleGlob(glob) {
 /**
  * Update all the sources path to be relative to the file that will be written (parameter --output).
  *
- * @param  {String}   file    path of the file being processed
- * @param  {String}   content content of the file
- * @param  {Object}   map     existing sourcemap associated with the file
+ * @param {String} file path of the file being processed.
+ * @param {String} content content of the file.
+ * @param {Object} map existing sourcemap associated with the file.
  */
 function prepareMap(file, content, map) {
   map.map.sources.forEach((source, i) => {
@@ -230,9 +228,8 @@ function prepareMap(file, content, map) {
  * - If no sourcemap exists, a new one is created (if map parameter is set)
  *   and the file content is added to its sourceContent attribute if the map-embed parameter is set.
  *
- * @param  {String}                 file path of the file to concat
- * @return {Promise<FileToConcat>}       A Promise that resolve to a FileToConcat with
- *                                       filename, content and sourcemap to concatenate
+ * @param {String} file path of the file to concat.
+ * @return {Promise<FileToConcat>} A Promise that resolve to a FileToConcat with filename, content and sourcemap to concatenate.
  */
 function handleFile(file) {
   if (argv.map && argv.output) {
@@ -314,7 +311,7 @@ function output() {
 /**
  * Return a source mapping URL comment based on the output file extension.
  *
- * @return {String} the sourceMappingURL comment
+ * @return {String} the sourceMappingURL comment.
  */
 function getSourceMappingURL() {
   if (path.extname(argv.output) === '.css') {
@@ -326,8 +323,8 @@ function getSourceMappingURL() {
 /**
 * Removes the sourceMappingURL comment in code and eventual double new line character.
 *
-* @param  {Buffer}  code the code to modify
-* @return {String}       the modified code
+* @param {Buffer} code the code to modify.
+* @return {String} the modified code.
 */
 function removeMapURL(code) {
   return sourceMappingURL.removeFrom(code.toString()).replace(/\n\n$/, '\n');
@@ -336,8 +333,8 @@ function removeMapURL(code) {
 /**
  * Log to the console, only if --output is set.
  *
- * @param  {String}       type   Type of log (add, write, map, footer, banner, dbanner)
- * @param  {...String}    msg    Value to interpolate
+ * @param {String} type Type of log (add, write, map, footer, banner, dbanner).
+ * @param {...String} msg Value to interpolate.
  */
 function log(type, ...rest) {
   if (argv.output) {
