@@ -27,7 +27,6 @@
     "babel-cli": "^6.24.1",
     "babel-preset-env": "^1.5.2",
     "chalk": "^2.0.1",
-    "chmod": "^0.2.1",
     "codecov": "^2.2.0",
     "nyc": "^11.0.3",
     "randomstring": "^1.1.5",
@@ -37,7 +36,10 @@
   "engines": {
     "node": ">=4"
   },
-  "files": ["lib", "bin"],
+  "files": [
+    "lib",
+    "bin"
+  ],
   "homepage": "https://github.com/vanduynslagerp/ncat#readme",
   "keywords": [
     "banner",

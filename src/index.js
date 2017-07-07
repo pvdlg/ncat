@@ -130,7 +130,7 @@ function concatBanner() {
       return Promise.resolve().then(() => {
         // eslint-disable-next-line global-require
         concat.add(null, require(path.join(process.cwd(), argv.banner)));
-        return log('banner', path.normalize(argv.banner));
+        return log('banner', argv.banner);
       });
     } else {
       return readPkg().then((pkg) => {
@@ -152,7 +152,7 @@ function concatFooter() {
     return Promise.resolve().then(() => {
       // eslint-disable-next-line global-require
       concat.add(null, require(path.join(process.cwd(), argv.footer)));
-      return log('footer', `Concat footer from ${path.normalize(argv.footer)}`);
+      return log('footer', `Concat footer from ${argv.footer}`);
     });
   }
   return Promise.resolve();
@@ -202,9 +202,7 @@ function handleGlob(glob) {
   if (glob === '-') {
     return stdinCache.then((stdin) => [{content: stdin}]);
   } else {
-    return globby(glob.split(' '), {nodir: true}).then((files) =>
-      Promise.all(files.map((file) => path.normalize(file)).map(handleFile))
-    );
+    return globby(glob.split(' '), {nodir: true}).then((files) => Promise.all(files.map(handleFile)));
   }
 }
 
@@ -296,17 +294,15 @@ function handleFile(file) {
  */
 function output() {
   if (argv.output) {
-    const outputPath = path.normalize(argv.output);
-
     return Promise.all([
       fs
         .outputFile(
-          outputPath,
+          argv.output,
           argv.map ? Buffer.concat([concat.content, Buffer.from(getSourceMappingURL())]) : concat.content
         )
-        .then(() => log('write', outputPath)),
+        .then(() => log('write', argv.output)),
       argv.map ?
-        fs.outputFile(`${outputPath}.map`, concat.sourceMap).then(() => log('write', `${outputPath}.map`)) :
+        fs.outputFile(`${argv.output}.map`, concat.sourceMap).then(() => log('write', `${argv.output}.map`)) :
         undefined,
     ]);
   } else {

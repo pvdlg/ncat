@@ -20,7 +20,8 @@ import {execFile} from 'child_process';
 export default function cli(args, stdinStream, cwd) {
   /* eslint-disable promise/avoid-new */
   return new Promise((resolve) => {
-    const cp = execFile(path.resolve('bin/ncat'), args, {cwd}, (err, stdout, stderr) => {
+    args.unshift(path.resolve('bin/ncat'));
+    const cp = execFile('node', args, {cwd}, (err, stdout, stderr) => {
       resolve({
         code: err && err.code ? err.code : 0,
         err,

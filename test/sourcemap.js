@@ -1,3 +1,4 @@
+import path from 'path';
 import test from 'ava';
 import fs from 'fs-extra';
 import cli from './helpers/cli';
@@ -87,8 +88,8 @@ test('--map generate an external map and include existing maps', async(t) => {
   t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
   const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
-  t.is('../../a-map.css', sourceMap.sources[0]);
-  t.is('../../b-map.css', sourceMap.sources[1]);
+  t.is(path.resolve('../../a-map.css'), path.resolve(sourceMap.sources[0]));
+  t.is(path.resolve('../../b-map.css'), path.resolve(sourceMap.sources[1]));
 });
 
 test('--map generate an external map and include existing inlined maps', async(t) => {
@@ -106,8 +107,8 @@ test('--map generate an external map and include existing inlined maps', async(t
   t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
   const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
-  t.is('../../a-map-inline.css', sourceMap.sources[0]);
-  t.is('../../b-map.css', sourceMap.sources[1]);
+  t.is(path.resolve('../../a-map-inline.css'), path.resolve(sourceMap.sources[0]));
+  t.is(path.resolve('../../b-map.css'), path.resolve(sourceMap.sources[1]));
 });
 
 test('--map generate an external map and include existing maps from sub-directory', async(t) => {
@@ -125,8 +126,8 @@ test('--map generate an external map and include existing maps from sub-director
   t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
   const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
-  t.is('../../a-map-subdir.css', sourceMap.sources[0]);
-  t.is('../../b-map.css', sourceMap.sources[1]);
+  t.is(path.resolve('../../a-map-subdir.css'), path.resolve(sourceMap.sources[0]));
+  t.is(path.resolve('../../b-map.css'), path.resolve(sourceMap.sources[1]));
   t.is(sourceMap.file, 'output.css');
 });
 
@@ -183,8 +184,8 @@ test('--map generate an external map even if a source file is refencing a non-ex
   t.is(await read(output), await read('test/fixtures/expected/ab-map.css'));
   const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
-  t.is('../../a-missing-map.css', sourceMap.sources[0]);
-  t.is('../../b-map.css', sourceMap.sources[1]);
+  t.is(path.resolve('../../a-missing-map.css'), path.resolve(sourceMap.sources[0]));
+  t.is(path.resolve('../../b-map.css'), path.resolve(sourceMap.sources[1]));
   /* eslint-disable max-len */
   t.regex(
     stdout,
@@ -208,8 +209,8 @@ test('--map generate an external map even if a source file is refencing a non-ex
   t.is(await read(output), await read('test/fixtures/expected/ab-map.css'));
   const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
-  t.is('../../a-missing-map.css', sourceMap.sources[0]);
-  t.is('../../b-map.css', sourceMap.sources[1]);
+  t.is(path.resolve('../../a-missing-map.css'), path.resolve(sourceMap.sources[0]));
+  t.is(path.resolve('../../b-map.css'), path.resolve(sourceMap.sources[1]));
   /* eslint-disable max-len */
   t.regex(
     stdout,
