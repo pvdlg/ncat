@@ -2,9 +2,9 @@ import path from 'path';
 import {execFile} from 'child_process';
 
 /**
- * @typedef  {Object}        CliOutput
- * @property {Number}        code
- * @property {Error}         err
+ * @typedef {Object} CliOutput
+ * @property {Number} code
+ * @property {Error} err
  * @property {String|Buffer} stdout
  * @property {String|Buffer} stderr
  */
@@ -12,10 +12,10 @@ import {execFile} from 'child_process';
 /**
  * Execute the ncat command line.
  *
- * @param    {Array}              args        List of arguments to pass to ncat
- * @param    {stream.Readable}    stdinStream Data to pass to the standard input
- * @param    {String}             cwd         Current working directory of the ncat cli process
- * @return   {Promise<CliOutput>}             A Promise that resolve to an Object with following properties
+ * @param {Array} args List of arguments to pass to ncat.
+ * @param {stream.Readable} stdinStream Data to pass to the standard input.
+ * @param {String} cwd Current working directory of the ncat cli process.
+ * @return {Promise<CliOutput>} A Promise that resolve to an Object with following properties.
  */
 export default function cli(args, stdinStream, cwd) {
   /* eslint-disable promise/avoid-new */
