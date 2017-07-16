@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import path from 'path';
 import fs from 'fs-extra';
 import pify from 'pify';
@@ -126,7 +124,6 @@ function concatBanner() {
   if (typeof argv.banner !== 'undefined') {
     if (argv.banner) {
       return Promise.resolve().then(() => {
-        // eslint-disable-next-line global-require
         concat.add(null, require(path.join(process.cwd(), argv.banner)));
         return log('banner', argv.banner);
       });
@@ -148,7 +145,6 @@ function concatBanner() {
 function concatFooter() {
   if (argv.footer) {
     return Promise.resolve().then(() => {
-      // eslint-disable-next-line global-require
       concat.add(null, require(path.join(process.cwd(), argv.footer)));
       return log('footer', `Concat footer from ${argv.footer}`);
     });
@@ -172,7 +168,7 @@ function concatFiles() {
     ) {
       console.error(chalk.bold.red('Require at least 2 file, banner or footer to concatenate.\n'));
       yargs.showHelp();
-      process.exit(1);
+      return process.exit(1);
     }
     return files.forEach(file => {
       concat.add(file.file, file.content, file.map);

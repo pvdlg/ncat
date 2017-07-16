@@ -186,7 +186,6 @@ test('--map generate an external map even if a source file is refencing a non-ex
 
   t.is(path.resolve('../../a-missing-map.css'), path.resolve(sourceMap.sources[0]));
   t.is(path.resolve('../../b-map.css'), path.resolve(sourceMap.sources[1]));
-  /* eslint-disable max-len */
   t.regex(
     stdout,
     /The sourcemap (.*)a-missing-map.css.map referenced in (.*)a-missing-map.css cannot be read and will be ignored/
@@ -211,7 +210,6 @@ test('--map generate an external map even if a source file is refencing a non-ex
 
   t.is(path.resolve('../../a-missing-map.css'), path.resolve(sourceMap.sources[0]));
   t.is(path.resolve('../../b-map.css'), path.resolve(sourceMap.sources[1]));
-  /* eslint-disable max-len */
   t.regex(
     stdout,
     /The sourcemap (.*)a-missing-map.css.map referenced in (.*)a-missing-map.css cannot be read and will be ignored/

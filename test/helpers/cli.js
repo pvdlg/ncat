@@ -34,4 +34,5 @@ export default function cli(args, stdinStream, cwd) {
       stdinStream.pipe(cp.stdin);
     }
   });
+  /* eslint-enable promise/avoid-new */
 }
