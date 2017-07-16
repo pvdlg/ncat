@@ -5,7 +5,7 @@ import cli from './helpers/cli';
 import tmp from './helpers/tmp';
 import read from './helpers/read';
 
-test('--map generate an external map (css)', async(t) => {
+test('--map generate an external map (css)', async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-m', '-o', output]);
 
@@ -18,7 +18,7 @@ test('--map generate an external map (css)', async(t) => {
   t.is(sourceMap.file, 'output.css');
 });
 
-test('--map generate an external map (js)', async(t) => {
+test('--map generate an external map (js)', async t => {
   const output = tmp('output.js');
   const {error, stderr} = await cli(['test/fixtures/a.js', 'test/fixtures/b.js', '-m', '-o', output]);
 
@@ -31,7 +31,7 @@ test('--map generate an external map (js)', async(t) => {
   t.is(sourceMap.file, 'output.js');
 });
 
-test('--map generate an external map ignoring stdin', async(t) => {
+test('--map generate an external map ignoring stdin', async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli(
     ['test/fixtures/a.css', '-', '-m', '-o', output],
@@ -47,7 +47,7 @@ test('--map generate an external map ignoring stdin', async(t) => {
   t.is(sourceMap.file, 'output.css');
 });
 
-test('without --map do not generate an external map', async(t) => {
+test('without --map do not generate an external map', async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-o', output]);
 
@@ -56,7 +56,7 @@ test('without --map do not generate an external map', async(t) => {
   t.notRegex(await read(output), /\/*# sourceMappingURL=output.css.map/);
 });
 
-test('--map generate an external map with non embedded sources', async(t) => {
+test('--map generate an external map with non embedded sources', async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-b', '-m', '-o', output]);
 
@@ -68,7 +68,7 @@ test('--map generate an external map with non embedded sources', async(t) => {
   t.is(sourceMap.file, 'output.css');
 });
 
-test('--map generate an external map with embedded sources', async(t) => {
+test('--map generate an external map with embedded sources', async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-b', '-m', '-e', '-o', output]);
 
@@ -80,7 +80,7 @@ test('--map generate an external map with embedded sources', async(t) => {
   t.is(await read('test/fixtures/b.css'), sourceMap.sourcesContent[1]);
 });
 
-test('--map generate an external map and include existing maps', async(t) => {
+test('--map generate an external map and include existing maps', async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli(['test/fixtures/a-map.css', 'test/fixtures/b-map.css', '-b', '-m', '-o', output]);
 
@@ -92,7 +92,7 @@ test('--map generate an external map and include existing maps', async(t) => {
   t.is(path.resolve('../../b-map.css'), path.resolve(sourceMap.sources[1]));
 });
 
-test('--map generate an external map and include existing inlined maps', async(t) => {
+test('--map generate an external map and include existing inlined maps', async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli([
     'test/fixtures/a-map-inline.css',
@@ -111,7 +111,7 @@ test('--map generate an external map and include existing inlined maps', async(t
   t.is(path.resolve('../../b-map.css'), path.resolve(sourceMap.sources[1]));
 });
 
-test('--map generate an external map and include existing maps from sub-directory', async(t) => {
+test('--map generate an external map and include existing maps from sub-directory', async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli([
     'test/fixtures/a-map-subdir.css',
@@ -131,7 +131,7 @@ test('--map generate an external map and include existing maps from sub-director
   t.is(sourceMap.file, 'output.css');
 });
 
-test('--map generate an external map and preserve embeded code', async(t) => {
+test('--map generate an external map and preserve embeded code', async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli([
     'test/fixtures/a-map-embed.css',
@@ -150,7 +150,7 @@ test('--map generate an external map and preserve embeded code', async(t) => {
   t.is(await read('test/fixtures/b.css'), sourceMap.sourcesContent[1]);
 });
 
-test('--map generate an external map and do not embed code if it wasn\'t embeded in original map', async(t) => {
+test("--map generate an external map and do not embed code if it wasn't embeded in original map", async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli([
     'test/fixtures/a-map.css',
@@ -169,7 +169,7 @@ test('--map generate an external map and do not embed code if it wasn\'t embeded
   t.is(undefined, sourceMap.sourcesContent);
 });
 
-test('--map generate an external map even if a source file is refencing a non-existant map', async(t) => {
+test('--map generate an external map even if a source file is refencing a non-existant map', async t => {
   const output = tmp('output.css');
   const {error, stderr, stdout} = await cli([
     'test/fixtures/a-missing-map.css',
@@ -193,7 +193,7 @@ test('--map generate an external map even if a source file is refencing a non-ex
   );
 });
 
-test('--map generate an external map even if a source file is refencing a non-existant map and use embed option', async(t) => {
+test('--map generate an external map even if a source file is refencing a non-existant map and use embed option', async t => {
   const output = tmp('output.css');
   const {error, stderr, stdout} = await cli([
     'test/fixtures/a-missing-map.css',

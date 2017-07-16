@@ -2,7 +2,7 @@ import test from 'ava';
 import cli from './helpers/cli';
 const {version} = require('./../package');
 
-test('--help', async(t) => {
+test('--help', async t => {
   const {code, error, stderr, stdout} = await cli(['-h']);
 
   t.ifError(error, stderr);
@@ -12,7 +12,7 @@ test('--help', async(t) => {
   t.regex(stdout, /Examples:/);
 });
 
-test('--version', async(t) => {
+test('--version', async t => {
   const {code, error, stderr, stdout} = await cli(['--version']);
 
   t.ifError(error, stderr);

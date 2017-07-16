@@ -15,11 +15,11 @@ import {execFile} from 'child_process';
  * @param {Array} args List of arguments to pass to ncat.
  * @param {stream.Readable} stdinStream Data to pass to the standard input.
  * @param {String} cwd Current working directory of the ncat cli process.
- * @return {Promise<CliOutput>} A Promise that resolve to an Object with following properties.
+ * @return {Promise<CliOutput>} A Promise that resolve to the CLI execution result.
  */
 export default function cli(args, stdinStream, cwd) {
   /* eslint-disable promise/avoid-new */
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     args.unshift(path.resolve('bin/ncat'));
     const cp = execFile('node', args, {cwd}, (err, stdout, stderr) => {
       resolve({

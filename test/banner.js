@@ -5,7 +5,7 @@ import tmp from './helpers/tmp';
 import read from './helpers/read';
 const {pkg} = require('read-pkg-up').sync();
 
-test('--banner works with default banner', async(t) => {
+test('--banner works with default banner', async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-b', '-o', output]);
 
@@ -18,7 +18,7 @@ test('--banner works with default banner', async(t) => {
   );
 });
 
-test('--banner works with custom banner', async(t) => {
+test('--banner works with custom banner', async t => {
   const output = tmp('output.css');
   const {error, stderr} = await cli([
     'test/fixtures/a.css',
@@ -38,13 +38,13 @@ test('--banner works with custom banner', async(t) => {
   );
 });
 
-test('--banner works with one file', async(t) => {
+test('--banner works with one file', async t => {
   const {code} = await cli(['test/fixtures/a.css', '-b']);
 
   t.is(code, 0, 'expected zero return code');
 });
 
-test('--banner works with empty package.json', async(t) => {
+test('--banner works with empty package.json', async t => {
   const {error, stderr, stdout} = await cli(
     ['-', '-b'],
     fs.createReadStream('test/fixtures/b.css'),
@@ -58,7 +58,7 @@ test('--banner works with empty package.json', async(t) => {
   );
 });
 
-test('--banner works with package.json with only name', async(t) => {
+test('--banner works with package.json with only name', async t => {
   const {error, stderr, stdout} = await cli(
     ['-', '-b'],
     fs.createReadStream('test/fixtures/b.css'),
