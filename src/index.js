@@ -105,15 +105,15 @@ const concat = new Concat(
  */
 const stdinCache = stdinCache || getStdin.buffer();
 
-concatBanner()
-  .then(() => concatFiles())
-  .then(() => concatFooter())
-  .then(() => output())
-  .then(() => process.exit())
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
+/**
+ * Main function of the CLI. Concat banner, then files, then footer and finnaly output concatenated file.
+ *
+ * @method main
+ * @return {Promise} Promise that resolve when the output file is written.
+ */
+export function main() {
+  return concatBanner().then(() => concatFiles()).then(() => concatFooter()).then(() => output());
+}
 
 /**
  * Concatenate a default or custom banner.
@@ -166,9 +166,9 @@ function concatFiles() {
       (files.length < 2 && typeof argv.banner === 'undefined' && !argv.footer) ||
       (files.length < 1 && (typeof argv.banner === 'undefined' || !argv.footer))
     ) {
-      console.error(chalk.bold.red('Require at least 2 file, banner or footer to concatenate.\n'));
-      yargs.showHelp();
-      return process.exit(1);
+      throw new Error(
+        chalk.bold.red('Require at least 2 file, banner or footer to concatenate. ("ncat --help" for help)\n')
+      );
     }
     return files.forEach(file => {
       concat.add(file.file, file.content, file.map);
@@ -248,11 +248,9 @@ function handleFile(file) {
           }
           return null;
         })
-        .catch(readMapErr => {
+        .catch(err => {
           console.log(
-            chalk.bold.yellow(
-              `The sourcemap ${readMapErr.path} referenced in ${file} cannot be read and will be ignored`
-            )
+            chalk.bold.yellow(`The sourcemap ${err.path} referenced in ${file} cannot be read and will be ignored`)
           );
         })
         .then(result => {

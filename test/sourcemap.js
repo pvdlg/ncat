@@ -10,7 +10,6 @@ test('--map generate an external map (css)', async t => {
   const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-m', '-o', output]);
 
   t.ifError(error, stderr);
-
   t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
   t.regex(await read(output), /\/\*# sourceMappingURL=output\.css\.map \*\//);
   const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
@@ -23,7 +22,6 @@ test('--map generate an external map (js)', async t => {
   const {error, stderr} = await cli(['test/fixtures/a.js', 'test/fixtures/b.js', '-m', '-o', output]);
 
   t.ifError(error, stderr);
-
   t.truthy(await fs.pathExists(output.replace('.js', '.js.map')));
   t.regex(await read(output), /\/\/# sourceMappingURL=output\.js\.map/);
   const sourceMap = JSON.parse(await read(output.replace('.js', '.js.map')));
