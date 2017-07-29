@@ -22,22 +22,23 @@
     "yargs": "^8.0.2"
   },
   "devDependencies": {
-    "@metahub/eslint-config": "^1.5.0",
+    "@metahub/eslint-config": "^1.6.0",
     "ava": "^0.21.0",
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
-    "babel-preset-env": "^1.5.2",
+    "babel-preset-env": "^1.6.0",
     "chalk": "^2.0.1",
     "codecov": "^2.2.0",
-    "eslint": "^4.2.0",
+    "eslint": "^4.3.0",
     "eslint-config-prettier": "^2.3.0",
     "eslint-plugin-ava": "^4.2.1",
-    "eslint-plugin-babel": "^4.1.1",
+    "eslint-plugin-babel": "^4.1.2",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jasmine": "^2.7.1",
+    "eslint-plugin-jasmine": "^2.8.2",
     "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-promise": "^3.5.0",
+    "execa": "^0.7.0",
     "nyc": "^11.0.3",
     "prettier": "^1.5.3",
     "randomstring": "^1.1.5",
@@ -47,7 +48,10 @@
   "engines": {
     "node": ">=4"
   },
-  "files": ["lib", "bin"],
+  "files": [
+    "lib",
+    "bin"
+  ],
   "homepage": "https://github.com/vanduynslagerp/ncat#readme",
   "keywords": [
     "banner",
