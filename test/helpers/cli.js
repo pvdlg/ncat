@@ -1,38 +1,14 @@
 import path from 'path';
-import {execFile} from 'child_process';
-
-/**
- * @typedef {Object} CliOutput
- * @property {Number} code
- * @property {Error} err
- * @property {String|Buffer} stdout
- * @property {String|Buffer} stderr
- */
+import execa from 'execa';
 
 /**
  * Execute the ncat command line.
  *
  * @param {Array} args List of arguments to pass to ncat.
- * @param {stream.Readable} stdinStream Data to pass to the standard input.
+ * @param {stream.Readable} input Data to pass to the standard input.
  * @param {String} cwd Current working directory of the ncat cli process.
- * @return {Promise<CliOutput>} A Promise that resolve to the CLI execution result.
+ * @return {Promise<ChildProcess>} A Promise that resolve to the CLI execution result (as ChildProcess instance).
  */
-export default function cli(args, stdinStream, cwd) {
-  /* eslint-disable promise/avoid-new */
-  return new Promise(resolve => {
-    args.unshift(path.resolve('bin/ncat'));
-    const cp = execFile('node', args, {cwd}, (err, stdout, stderr) => {
-      resolve({
-        code: err && err.code ? err.code : 0,
-        err,
-        stdout,
-        stderr,
-      });
-    });
-
-    if (stdinStream) {
-      stdinStream.pipe(cp.stdin);
-    }
-  });
-  /* eslint-enable promise/avoid-new */
+export default function cli(args, input, cwd) {
+  return execa(path.resolve('bin/ncat'), args, {cwd, input, stripEof: false});
 }
