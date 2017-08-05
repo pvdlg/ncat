@@ -38,7 +38,7 @@
     "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-promise": "^3.5.0",
-    "execa": "^0.7.0",
+    "execa": "^0.8.0",
     "nyc": "^11.0.3",
     "prettier": "^1.5.3",
     "randomstring": "^1.1.5",
