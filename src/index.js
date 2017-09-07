@@ -112,7 +112,10 @@ const stdinCache = stdinCache || getStdin.buffer();
  * @return {Promise} Promise that resolve when the output file is written.
  */
 export function main() {
-  return concatBanner().then(() => concatFiles()).then(() => concatFooter()).then(() => output());
+  return concatBanner()
+    .then(() => concatFiles())
+    .then(() => concatFooter())
+    .then(() => output());
 }
 
 /**
