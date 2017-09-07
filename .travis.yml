@@ -1,8 +1,7 @@
-sudo: false
-dist: trusty
 language: node_js
 node_js:
-  - node
+  - 8
+  - 6
   - 4
 os:
   - linux
@@ -12,25 +11,22 @@ branches:
     - master
     - /^greenkeeper.*$/
 git:
-  depth: 3
-cache:
-  directories: node_modules
-env:
-  global:
-    - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
+  depth: 999
 before_install:
-  - if [[ `npm -v` != 5* ]]; then npm install -g npm@5; fi
-  - npm install -g greenkeeper-lockfile@1
-before_script:
-  - greenkeeper-lockfile-update
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 --retry 3 -o ./cc-test-reporter; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-darwin-amd64 --retry 3 -o ./cc-test-reporter; fi
-  - chmod +x ./cc-test-reporter
+  - if [[ `npm -v` < 5* ]]; then npm install -g npm@5; fi
+install:
+  - travis_retry npm install
 script:
   - npm run test
-after_script:
-  - greenkeeper-lockfile-upload
-after_success:
-  - if [ -n "${CC_TEST_REPORTER_ID:-}" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -d; fi
-  - if [ -n "${CODECOV_TOKEN:-}" ]; then npm run codecov; fi
-  - npm run coverage
+env:
+  - BUILD_LEADER_ID=7
+jobs:
+  include:
+    - stage: release
+      node_js: 8
+      os: linux
+      script: npm run test
+      after_success: 
+        - if [ -n "${CODECOV_TOKEN:-}" ]; then npm run codecov; fi
+        - npm run coverage
+        - npm run semantic-release
