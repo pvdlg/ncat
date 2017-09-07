@@ -4,7 +4,7 @@
   "version": "1.1.1",
   "author": "Pierre Vanduynslager",
   "bin": {
-    "ncat": "./bin/ncat"
+    "ncat": "./bin/ncat.js"
   },
   "bugs": {
     "url": "https://github.com/vanduynslagerp/ncat/issues"
@@ -70,18 +70,34 @@
   ],
   "license": "MIT",
   "main": "index.js",
+  "nyc": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100,
+    "include": [
+      "lib/**/*.js",
+      "bin/**/*"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "all": true
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vanduynslagerp/ncat.git"
   },
   "scripts": {
     "clean": "rimraf test/fixtures/.tmp && rimraf coverage && rimraf .nyc_output",
-    "compile": "rimraf lib && babel src --source-maps --out-dir lib",
-    "pretest": "npm run clean && npm run compile && npm run lint",
-    "test": "nyc ava -v && nyc report --reporter=lcov",
     "codecov": "codecov",
+    "compile": "rimraf lib && babel src --source-maps --out-dir lib",
+    "coverage": "nyc check-coverage",
     "lint": "eslint src bin test package.json",
     "prepare": "npm run compile",
-    "prepublishOnly": "npm run test"
+    "prepublishOnly": "npm run test",
+    "pretest": "npm run clean && npm run compile && npm run lint",
+    "test": "nyc ava -v"
   }
 }
