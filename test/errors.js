@@ -1,6 +1,5 @@
 import test from 'ava';
-import fs from 'fs-extra';
-import tmp from './helpers/tmp';
+import tempy from 'tempy';
 import cli from './helpers/cli';
 
 test('one file and no banner', async t => {
@@ -25,9 +24,7 @@ test('non-existing files', async t => {
 });
 
 test('Output as a directory', async t => {
-  const output = tmp('dir');
-
-  await fs.mkdirp(output);
+  const output = tempy.directory();
   const {stderr, code} = await t.throws(cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-o', output]));
 
   t.is(code, 1, 'expected non-zero error code');

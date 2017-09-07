@@ -1,11 +1,11 @@
 import test from 'ava';
+import tempy from 'tempy';
 import cli from './helpers/cli';
-import tmp from './helpers/tmp';
 import read from './helpers/read';
 const {pkg} = require('read-pkg-up').sync();
 
 test('--footer works with custom footer', async t => {
-  const output = tmp('output.css');
+  const output = tempy.file({extension: 'css'});
   const {error, stderr} = await cli([
     'test/fixtures/a.css',
     'test/fixtures/b.css',
@@ -31,7 +31,7 @@ test('--footer works with one file', async t => {
 });
 
 test('--footer works with a banner and a footer', async t => {
-  const output = tmp('output.css');
+  const output = tempy.file({extension: 'css'});
   const {error, stderr} = await cli(['-b', '-f', 'test/fixtures/footer.js', '-o', output]);
 
   t.ifError(error, stderr);

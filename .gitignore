@@ -127,7 +127,6 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/macos,windows,linux,node
 
-test/fixtures/.tmp
 lib
 yarn.lock
 package-lock.json

@@ -1,12 +1,12 @@
 import test from 'ava';
 import fs from 'fs-extra';
+import tempy from 'tempy';
 import cli from './helpers/cli';
-import tmp from './helpers/tmp';
 import read from './helpers/read';
 const {pkg} = require('read-pkg-up').sync();
 
 test('--banner works with default banner', async t => {
-  const output = tmp('output.css');
+  const output = tempy.file({extension: 'css'});
   const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-b', '-o', output]);
 
   t.ifError(error, stderr);
@@ -19,7 +19,7 @@ test('--banner works with default banner', async t => {
 });
 
 test('--banner works with custom banner', async t => {
-  const output = tmp('output.css');
+  const output = tempy.file({extension: 'css'});
   const {error, stderr} = await cli([
     'test/fixtures/a.css',
     'test/fixtures/b.css',

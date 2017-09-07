@@ -46,7 +46,9 @@
     "prettier": ">=1.5.3",
     "randomstring": "^1.1.5",
     "rimraf": "^2.6.1",
-    "uuid": "^3.1.0"
+    "temp-dir": "^1.0.0",
+    "tempy": "^0.1.0",
+    "unixify": "^1.0.0"
   },
   "engines": {
     "node": ">=4"
@@ -90,7 +92,7 @@
     "url": "git+https://github.com/vanduynslagerp/ncat.git"
   },
   "scripts": {
-    "clean": "rimraf test/fixtures/.tmp && rimraf coverage && rimraf .nyc_output",
+    "clean": "rimraf rimraf coverage && rimraf .nyc_output",
     "codecov": "codecov",
     "compile": "rimraf lib && babel src --source-maps --out-dir lib",
     "coverage": "nyc check-coverage",
