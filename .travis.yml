@@ -33,3 +33,4 @@ after_script:
 after_success:
   - if [ -n "${CC_TEST_REPORTER_ID:-}" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -d; fi
   - if [ -n "${CODECOV_TOKEN:-}" ]; then npm run codecov; fi
+  - npm run coverage
