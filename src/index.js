@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import pify from 'pify';
 import Concat from 'concat-with-sourcemaps';
+import unixify from 'unixify';
 import getStdin from 'get-stdin';
 import sourceMappingURL from 'source-map-url';
 import sourceMapResolve from 'source-map-resolve';
@@ -212,7 +213,7 @@ function handleGlob(glob) {
  */
 function prepareMap(file, content, map) {
   map.map.sources.forEach((source, i) => {
-    map.map.sources[i] = path.relative(path.dirname(argv.output), path.join(path.dirname(file), source));
+    map.map.sources[i] = unixify(path.relative(path.dirname(argv.output), path.join(path.dirname(file), source)));
   });
 }
 
