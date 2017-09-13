@@ -62,7 +62,7 @@
     "sr-commit-analyzer": "^2.0.3",
     "sr-release-notes-generator": "^1.1.3",
     "temp-dir": "^1.0.0",
-    "tempy": "^0.1.0"
+    "tempy": "^0.2.0"
   },
   "engines": {
     "node": ">=4"
