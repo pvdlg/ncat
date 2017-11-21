@@ -21,8 +21,9 @@ const chalk = yargonaut.chalk();
  */
 const DEFAULT_BANNER = pkg =>
   `/*!
- * ${pkg.name ? pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) : 'unknown'} v${pkg.version ||
-    '0.0.0'}${pkg.homepage || pkg.name ? `\n * ${pkg.homepage || `https://npm.com/${pkg.name}`}` : ''}
+ * ${pkg.name ? pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) : 'unknown'} v${pkg.version || '0.0.0'}${
+    pkg.homepage || pkg.name ? `\n * ${pkg.homepage || `https://npm.com/${pkg.name}`}` : ''
+  }
  *
  * Copyright (c) ${new Date().getFullYear()}${pkg.author && pkg.author.name ? ` ${pkg.author.name}` : ''}
  *${pkg.license ? ` Licensed under the ${pkg.license} license\n *` : ''}/\n`;
@@ -168,7 +169,7 @@ function concatFiles() {
 
     if (
       (files.length < 2 && typeof argv.banner === 'undefined' && !argv.footer) ||
-      (files.length < 1 && (typeof argv.banner === 'undefined' || !argv.footer))
+      (files.length === 0 && (typeof argv.banner === 'undefined' || !argv.footer))
     ) {
       throw new Error(
         chalk.bold.red('Require at least 2 file, banner or footer to concatenate. ("ncat --help" for help)\n')
@@ -319,11 +320,11 @@ function getSourceMappingURL() {
 }
 
 /**
-* Removes the sourceMappingURL comment in code and eventual double new line character.
-*
-* @param {Buffer} code the code to modify.
-* @return {String} the modified code.
-*/
+ * Removes the sourceMappingURL comment in code and eventual double new line character.
+ *
+ * @param {Buffer} code the code to modify.
+ * @return {String} the modified code.
+ */
 function removeMapURL(code) {
   return sourceMappingURL.removeFrom(code.toString()).replace(/\n\n$/, '\n');
 }
