@@ -3,6 +3,7 @@ import fs from 'fs-extra';
 import tempy from 'tempy';
 import cli from './helpers/cli';
 import read from './helpers/read';
+
 const {pkg} = require('read-pkg-up').sync();
 
 test('--banner works with default banner', async t => {

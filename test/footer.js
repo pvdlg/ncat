@@ -2,6 +2,7 @@ import test from 'ava';
 import tempy from 'tempy';
 import cli from './helpers/cli';
 import read from './helpers/read';
+
 const {pkg} = require('read-pkg-up').sync();
 
 test('--footer works with custom footer', async t => {
