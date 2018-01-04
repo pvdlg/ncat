@@ -2,14 +2,11 @@
 
 Node CLI to concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer.
 
-[![npm](https://img.shields.io/npm/v/ncat.svg)](https://www.npmjs.com/package/ncat)
-[![npm](https://img.shields.io/npm/dt/ncat.svg)](https://www.npmjs.com/package/ncat)
-[![Greenkeeper badge](https://badges.greenkeeper.io/vanduynslagerp/ncat.svg)](https://greenkeeper.io/)
-[![license](https://img.shields.io/github/license/vanduynslagerp/ncat.svg)](https://github.com/vanduynslagerp/ncat/blob/master/LICENSE)
-
 [![Travis](https://img.shields.io/travis/vanduynslagerp/ncat.svg)](https://travis-ci.org/vanduynslagerp/ncat)
 [![AppVeyor](https://img.shields.io/appveyor/ci/vanduynslagerp/ncat.svg)](https://ci.appveyor.com/project/vanduynslagerp/ncat)
 [![Codecov](https://img.shields.io/codecov/c/github/vanduynslagerp/ncat.svg)](https://codecov.io/gh/vanduynslagerp/ncat)
+[![Greenkeeper badge](https://badges.greenkeeper.io/vanduynslagerp/ncat.svg)](https://greenkeeper.io/)
+[![license](https://img.shields.io/github/license/vanduynslagerp/ncat.svg)](https://github.com/vanduynslagerp/ncat/blob/master/LICENSE)
 
 ## Installation
 
@@ -41,15 +38,15 @@ $ ncat file_1.js file_2.js | uglifyjs > dist/bundle.min.js
 
 ## Options
 
-|Name|Type|Default|Description|
-|:---|:--:|:-----:|:----------|
-|`-o, --output`|`{String}`|`undefined`|Output File|
-|`-m, --map`|`{Boolean}`|`false`|Create an external sourcemap (including the sourcemaps of existing files)|
-|`-e, --map-embed`|`{Boolean}`|`false`|Embed the code in the sourcemap (only apply to code without an existing sourcemap)|
-|`-b, --banner`|`{Boolean\|String}`|`false`|Add a banner built with the package.json file. Optionally pass the path to a .js file containing custom banner that can be called with `require()`|
-|`-f, --footer`|`{String}`|`undefined`|The path to .js file containing custom footer that can be called with `require()`|
-|`-h, --help`|`{Boolean}`|`false`|CLI Help|
-|`-v, --version`|`{Boolean}`|`false`|CLI Version|
+| Name              |    Type           |   Default   | Description                                                                                                                                       |
+|:------------------|:-----------------:|:-----------:|:--------------------------------------------------------------------------------------------------------------------------------------------------|
+| `-o, --output`    | `{String}`        | `undefined` | Output File                                                                                                                                       |
+| `-m, --map`       | `{Boolean}`       |   `false`   | Create an external sourcemap (including the sourcemaps of existing files)                                                                         |
+| `-e, --map-embed` | `{Boolean}`       |   `false`   | Embed the code in the sourcemap (only apply to code without an existing sourcemap)                                                                |
+|`-b, --banner`     |`{Boolean\|String}`|   `false`   | Add a banner built with the package.json file. Optionally pass the path to a .js file containing custom banner that can be called with `require()`|
+| `-f, --footer`    | `{String}`        | `undefined` | The path to .js file containing custom footer that can be called with `require()`                                                                 |
+| `-h, --help`      | `{Boolean}`       |   `false`   | CLI Help                                                                                                                                          |
+| `-v, --version`   | `{Boolean}`       |   `false`   | CLI Version                                                                                                                                       |
 
 ## Examples
 
