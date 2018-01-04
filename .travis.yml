@@ -30,6 +30,5 @@ jobs:
       os: linux
       script: npm run test
       after_success:
-        - if [ -n "${CODECOV_TOKEN:-}" ]; then npm run codecov; fi
-        - npm run coverage
+        - npm run codecov
         - npm run semantic-release
