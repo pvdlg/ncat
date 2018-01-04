@@ -7,7 +7,6 @@ Node CLI to concatenate multiple files, with their sourcemaps and optionally std
 [![Greenkeeper badge](https://badges.greenkeeper.io/vanduynslagerp/ncat.svg)](https://greenkeeper.io/)
 [![license](https://img.shields.io/github/license/vanduynslagerp/ncat.svg)](https://github.com/vanduynslagerp/ncat/blob/master/LICENSE)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 [![Travis](https://img.shields.io/travis/vanduynslagerp/ncat.svg)](https://travis-ci.org/vanduynslagerp/ncat)
 [![AppVeyor](https://img.shields.io/appveyor/ci/vanduynslagerp/ncat.svg)](https://ci.appveyor.com/project/vanduynslagerp/ncat)
