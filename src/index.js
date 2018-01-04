@@ -19,7 +19,7 @@ const chalk = yargonaut.chalk();
  * @param {Object} pkg the parsed package.json.
  * @returns {String} the default banner.
  */
-const DEFAULT_BANNER = pkg =>
+const getDefaultBanner = pkg =>
   `/*!
  * ${pkg.name ? pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) : 'unknown'} v${pkg.version || '0.0.0'}${
     pkg.homepage || pkg.name ? `\n * ${pkg.homepage || `https://npm.com/${pkg.name}`}` : ''
@@ -105,7 +105,7 @@ const concat = new Concat(
  *
  * @type {String}
  */
-const stdinCache = stdinCache || getStdin.buffer();
+const stdinCache = getStdin.buffer();
 
 /**
  * Main function of the CLI. Concat banner, then files, then footer and finnaly output concatenated file.
@@ -113,12 +113,11 @@ const stdinCache = stdinCache || getStdin.buffer();
  * @method main
  * @return {Promise} Promise that resolve when the output file is written.
  */
-export function main() {
-  return concatBanner()
+module.exports = () =>
+  concatBanner()
     .then(() => concatFiles())
     .then(() => concatFooter())
     .then(() => output());
-}
 
 /**
  * Concatenate a default or custom banner.
@@ -132,12 +131,11 @@ function concatBanner() {
         concat.add(null, require(path.join(process.cwd(), argv.banner)));
         return log('banner', argv.banner);
       });
-    } else {
-      return readPkg().then(pkg => {
-        concat.add(null, DEFAULT_BANNER(pkg.pkg));
-        return log('dbanner', pkg.path);
-      });
     }
+    return readPkg().then(pkg => {
+      concat.add(null, getDefaultBanner(pkg.pkg));
+      return log('dbanner', pkg.path);
+    });
   }
   return Promise.resolve();
 }
@@ -200,9 +198,8 @@ function concatFiles() {
 function handleGlob(glob) {
   if (glob === '-') {
     return stdinCache.then(stdin => [{content: stdin}]);
-  } else {
-    return globby(glob.split(' '), {nodir: true}).then(files => Promise.all(files.map(handleFile)));
   }
+  return globby(glob.split(' '), {nodir: true}).then(files => Promise.all(files.map(handleFile)));
 }
 
 /**
@@ -270,15 +267,14 @@ function handleFile(file) {
           return result;
         })
     );
-  } else {
-    return fs.readFile(file).then(content => {
-      log('add', file);
-      return {
-        file,
-        content: removeMapURL(content),
-      };
-    });
   }
+  return fs.readFile(file).then(content => {
+    log('add', file);
+    return {
+      file,
+      content: removeMapURL(content),
+    };
+  });
 }
 
 /**
@@ -301,10 +297,9 @@ function output() {
         ? fs.outputFile(`${argv.output}.map`, concat.sourceMap).then(() => log('write', `${argv.output}.map`))
         : undefined,
     ]);
-  } else {
-    process.stdout.write(concat.content);
-    return Promise.resolve();
   }
+  process.stdout.write(concat.content);
+  return Promise.resolve();
 }
 
 /**

@@ -1,5 +1,6 @@
 import test from 'ava';
 import cli from './helpers/cli';
+
 const {version} = require('./../package');
 
 test('--help', async t => {
