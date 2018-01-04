@@ -11,7 +11,6 @@ Node CLI to concatenate multiple files, with their sourcemaps and optionally std
 
 [![Travis](https://img.shields.io/travis/vanduynslagerp/ncat.svg)](https://travis-ci.org/vanduynslagerp/ncat)
 [![AppVeyor](https://img.shields.io/appveyor/ci/vanduynslagerp/ncat.svg)](https://ci.appveyor.com/project/vanduynslagerp/ncat)
-[![Code Climate](https://img.shields.io/codeclimate/github/vanduynslagerp/ncat.svg)](https://codeclimate.com/github/vanduynslagerp/ncat)
 [![Codecov](https://img.shields.io/codecov/c/github/vanduynslagerp/ncat.svg)](https://codecov.io/gh/vanduynslagerp/ncat)
 
 ## Installation
