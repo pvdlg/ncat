@@ -3,6 +3,18 @@
   "description": "Node CLI to concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer",
   "version": "0.0.0-development",
   "author": "Pierre Vanduynslager",
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "4"
+          }
+        }
+      ]
+    ]
+  },
   "bin": {
     "ncat": "./bin/ncat.js"
   },
