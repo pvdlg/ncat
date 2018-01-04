@@ -19,7 +19,7 @@
     "ncat": "./bin/ncat.js"
   },
   "bugs": {
-    "url": "https://github.com/vanduynslagerp/ncat/issues"
+    "url": "https://github.com/pvdlg/ncat/issues"
   },
   "dependencies": {
     "concat-with-sourcemaps": "^1.0.4",
@@ -60,7 +60,7 @@
     "lib",
     "bin"
   ],
-  "homepage": "https://github.com/vanduynslagerp/ncat#readme",
+  "homepage": "https://github.com/pvdlg/ncat#readme",
   "keywords": [
     "banner",
     "cat",
@@ -102,7 +102,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vanduynslagerp/ncat.git"
+    "url": "git+https://github.com/pvdlg/ncat.git"
   },
   "scripts": {
     "codecov": "codecov -f coverage/coverage-final.json",
