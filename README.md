@@ -2,11 +2,11 @@
 
 Node CLI to concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer.
 
-[![Travis](https://img.shields.io/travis/vanduynslagerp/ncat.svg)](https://travis-ci.org/vanduynslagerp/ncat)
-[![AppVeyor](https://img.shields.io/appveyor/ci/vanduynslagerp/ncat.svg)](https://ci.appveyor.com/project/vanduynslagerp/ncat)
-[![Codecov](https://img.shields.io/codecov/c/github/vanduynslagerp/ncat.svg)](https://codecov.io/gh/vanduynslagerp/ncat)
-[![Greenkeeper badge](https://badges.greenkeeper.io/vanduynslagerp/ncat.svg)](https://greenkeeper.io/)
-[![license](https://img.shields.io/github/license/vanduynslagerp/ncat.svg)](https://github.com/vanduynslagerp/ncat/blob/master/LICENSE)
+[![Travis](https://img.shields.io/travis/pvdlg/ncat.svg)](https://travis-ci.org/pvdlg/ncat)
+[![AppVeyor](https://img.shields.io/appveyor/ci/pvdlg/ncat.svg)](https://ci.appveyor.com/project/pvdlg/ncat)
+[![Codecov](https://img.shields.io/codecov/c/github/pvdlg/ncat.svg)](https://codecov.io/gh/pvdlg/ncat)
+[![Greenkeeper badge](https://badges.greenkeeper.io/pvdlg/ncat.svg)](https://greenkeeper.io/)
+[![license](https://img.shields.io/github/license/pvdlg/ncat.svg)](https://github.com/pvdlg/ncat/blob/master/LICENSE)
 
 ## Installation
 
