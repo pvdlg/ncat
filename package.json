@@ -43,7 +43,7 @@
     "conventional-changelog-metahub": "^1.2.1",
     "eslint-config-prettier": ">=2.3.0",
     "eslint-plugin-prettier": ">=2.2.0",
-    "execa": "^0.8.0",
+    "execa": "^0.9.0",
     "nyc": "^11.0.3",
     "prettier": "~1.10.0",
     "randomstring": "^1.1.5",
