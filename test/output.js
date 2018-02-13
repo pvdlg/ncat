@@ -1,3 +1,4 @@
+import path from 'path';
 import test from 'ava';
 import randomstring from 'randomstring';
 import fs from 'fs-extra';
@@ -14,14 +15,16 @@ test('--output works', async t => {
 });
 
 test('preserve order with large number of files', async t => {
-  const outputFile = tempy.file();
+  const tmp = tempy.directory();
+  const outputFile = path.join(tmp, 'output');
+
   const outputFilePromises = [];
   const filepaths = [];
   const expected = [];
 
   // eslint-disable-next-line no-magic-numbers
   for (let i = 0; i < 100; i++) {
-    const filepath = tempy.file();
+    const filepath = path.join(tmp, `file-${i}`);
     const content = randomstring.generate();
 
     filepaths.push(filepath);
