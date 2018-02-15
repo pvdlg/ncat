@@ -7,5 +7,5 @@ import {readFile} from 'fs-extra';
  * @return {String} the content of the file.
  */
 export default function read(path) {
-  return readFile(path, 'utf8');
+	return readFile(path, 'utf8');
 }

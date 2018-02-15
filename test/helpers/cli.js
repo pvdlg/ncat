@@ -10,5 +10,5 @@ import execa from 'execa';
  * @return {Promise<ChildProcess>} A Promise that resolve to the CLI execution result (as ChildProcess instance).
  */
 export default function cli(args, input, cwd) {
-  return execa(path.resolve('bin/ncat.js'), args, {cwd, input, stripEof: false});
+	return execa(path.resolve('bin/ncat.js'), args, {cwd, input, stripEof: false});
 }
