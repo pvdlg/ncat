@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "concat-with-sourcemaps": "^1.0.4",
-    "fs-extra": "^5.0.0",
+    "fs-extra": "^6.0.0",
     "get-stdin": "^6.0.0",
     "globby": "^8.0.0",
     "pify": "^3.0.0",
