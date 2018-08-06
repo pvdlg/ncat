@@ -48,7 +48,7 @@
     "semantic-release": "^15.7.1",
     "temp-dir": "^1.0.0",
     "tempy": "^0.2.0",
-    "xo": "^0.21.0"
+    "xo": "^0.22.0"
   },
   "engines": {
     "node": ">=6"
@@ -109,6 +109,7 @@
     "test": "nyc ava -v"
   },
   "xo": {
-    "prettier": true
+    "prettier": true,
+    "ignore": ["test/fixtures/**"]
   }
 }
