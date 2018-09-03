@@ -250,9 +250,9 @@ function handleFile(file) {
 					}
 					return null;
 				})
-				.catch(err => {
+				.catch(error => {
 					console.log(
-						chalk.bold.yellow(`The sourcemap ${err.path} referenced in ${file} cannot be read and will be ignored`)
+						chalk.bold.yellow(`The sourcemap ${error.path} referenced in ${file} cannot be read and will be ignored`)
 					);
 				})
 				.then(result => {
