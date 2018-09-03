@@ -2,7 +2,7 @@
 
 require('../lib')()
 	.then(() => process.exit(0))
-	.catch(err => {
-		console.error(`\n  ${err.message}`);
+	.catch(error => {
+		console.error(`\n  ${error.message}`);
 		process.exit(1);
 	});

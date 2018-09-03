@@ -48,7 +48,7 @@
     "semantic-release": "^15.7.1",
     "temp-dir": "^1.0.0",
     "tempy": "^0.2.0",
-    "xo": "^0.22.0"
+    "xo": "^0.23.0"
   },
   "engines": {
     "node": ">=6"
