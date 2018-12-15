@@ -11,7 +11,7 @@ test('--map generate an external map (css)', async t => {
 	const output = tempy.file({extension: 'css'});
 	const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-m', '-o', output]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	t.regex(await read(output), new RegExp(`/*# source${''}MappingURL=${path.basename(output)}.map`));
 
@@ -24,7 +24,7 @@ test('--map generate an external map (js)', async t => {
 	const output = tempy.file({extension: 'js'});
 	const {error, stderr} = await cli(['test/fixtures/a.js', 'test/fixtures/b.js', '-m', '-o', output]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.js', '.js.map')));
 	t.regex(await read(output), new RegExp(`//# source${''}MappingURL=${path.basename(output)}.map`));
 
@@ -40,7 +40,7 @@ test('--map generate an external map ignoring stdin', async t => {
 		fs.createReadStream('test/fixtures/b.css')
 	);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
@@ -53,7 +53,7 @@ test('without --map do not generate an external map', async t => {
 	const output = tempy.file({extension: 'css'});
 	const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-o', output]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.falsy(await fs.pathExists(output.replace('.css', '.css.map')));
 	t.notRegex(await read(output), new RegExp(`/*# source${''}MappingURL=${path.basename(output)}.map`));
 });
@@ -62,7 +62,7 @@ test('--map generate an external map with non embedded sources', async t => {
 	const output = tempy.file({extension: 'css'});
 	const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-b', '-m', '-o', output]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
@@ -74,7 +74,7 @@ test('--map generate an external map with embedded sources', async t => {
 	const output = tempy.file({extension: 'css'});
 	const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-b', '-m', '-e', '-o', output]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
@@ -86,7 +86,7 @@ test('--map generate an external map and include existing maps', async t => {
 	const output = tempy.file({extension: 'css'});
 	const {error, stderr} = await cli(['test/fixtures/a-map.css', 'test/fixtures/b-map.css', '-b', '-m', '-o', output]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
@@ -105,7 +105,7 @@ test('--map generate an external map and include existing inlined maps', async t
 		output,
 	]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
@@ -124,7 +124,7 @@ test('--map generate an external map and include existing maps from sub-director
 		output,
 	]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
@@ -144,7 +144,7 @@ test('--map generate an external map and preserve embeded code', async t => {
 		output,
 	]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
@@ -164,7 +164,7 @@ test("--map generate an external map and do not embed code if it wasn't embeded 
 		output,
 	]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
@@ -181,7 +181,7 @@ test('--map generate an external map even if a source file is refencing a non-ex
 		output,
 	]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	t.is(
 		await read(output),
@@ -208,7 +208,7 @@ test('--map generate an external map even if a source file is refencing a non-ex
 		output,
 	]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	t.is(
 		await read(output),

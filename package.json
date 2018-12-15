@@ -3,6 +3,13 @@
   "description": "Node CLI to concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer",
   "version": "0.0.0-development",
   "author": "Pierre Vanduynslager",
+  "ava": {
+    "babel": {
+      "testOptions": {
+        "babelrc": false
+      }
+    }
+  },
   "babel": {
     "presets": [
       [
@@ -35,7 +42,7 @@
     "yargs": "^12.0.1"
   },
   "devDependencies": {
-    "ava": "^0.25.0",
+    "ava": "^1.0.1",
     "babel-cli": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "chalk": "^2.0.1",
