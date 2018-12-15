@@ -16,7 +16,7 @@ test('--footer works with custom footer', async t => {
 		output,
 	]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.is(
 		await read(output),
 		(await read('test/fixtures/expected/ab-footer.css'))
@@ -35,7 +35,7 @@ test('--footer works with a banner and a footer', async t => {
 	const output = tempy.file({extension: 'css'});
 	const {error, stderr} = await cli(['-b', '-f', 'test/fixtures/footer.js', '-o', output]);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.is(
 		await read(output),
 		(await read('test/fixtures/expected/banner-footer.css'))

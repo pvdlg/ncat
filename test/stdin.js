@@ -11,7 +11,7 @@ test('concatenate stdin', async t => {
 		fs.createReadStream('test/fixtures/b.css')
 	);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.is(await read(output), await read('test/fixtures/expected/ab.css'));
 });
 
@@ -22,6 +22,6 @@ test('concatenate stdin multiple times', async t => {
 		fs.createReadStream('test/fixtures/a.css')
 	);
 
-	t.ifError(error, stderr);
+	t.falsy(error, stderr);
 	t.is(await read(output), await read('test/fixtures/expected/aba.css'));
 });
