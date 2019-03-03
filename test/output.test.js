@@ -4,6 +4,7 @@ import test from 'ava';
 import randomstring from 'randomstring';
 import fs from 'fs-extra';
 import tempy from 'tempy';
+import unixify from 'unixify';
 import cli from './helpers/cli';
 import read from './helpers/read';
 
@@ -27,7 +28,7 @@ test('preserve order with large number of files', async t => {
 		const filepath = path.join(tmp, `file-${i}`);
 		const content = randomstring.generate();
 
-		filepaths.push(filepath);
+		filepaths.push(unixify(filepath));
 		expected.push(content);
 		outputFilePromises.push(fs.outputFile(filepath, content, {encoding: 'utf8'}));
 	}
