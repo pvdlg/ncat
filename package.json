@@ -31,7 +31,7 @@
   "dependencies": {
     "concat-with-sourcemaps": "^1.0.4",
     "fs-extra": "^7.0.0",
-    "get-stdin": "^6.0.0",
+    "get-stdin": "^7.0.0",
     "globby": "^8.0.0",
     "pify": "^4.0.0",
     "read-pkg-up": "^4.0.0",
