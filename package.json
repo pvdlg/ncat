@@ -78,7 +78,7 @@
     "sourcemap"
   ],
   "license": "MIT",
-  "main": "index.js",
+  "main": "lib/index.js",
   "nyc": {
     "include": [
       "lib/**/*.js",
@@ -117,6 +117,8 @@
   },
   "xo": {
     "prettier": true,
-    "ignore": ["test/fixtures/**"]
+    "ignore": [
+      "test/fixtures/**"
+    ]
   }
 }
