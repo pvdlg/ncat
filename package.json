@@ -51,7 +51,7 @@
     "execa": "^1.0.0",
     "nyc": "^13.1.0",
     "randomstring": "^1.1.5",
-    "rimraf": "^2.6.1",
+    "rimraf": "^3.0.0",
     "semantic-release": "^15.7.1",
     "temp-dir": "^1.0.0",
     "tempy": "^0.2.0",
