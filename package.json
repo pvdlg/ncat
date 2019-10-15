@@ -30,8 +30,8 @@
   },
   "dependencies": {
     "concat-with-sourcemaps": "^1.0.4",
-    "fs-extra": "^7.0.0",
-    "get-stdin": "^6.0.0",
+    "fs-extra": "^8.0.0",
+    "get-stdin": "^7.0.0",
     "globby": "^8.0.0",
     "pify": "^4.0.0",
     "read-pkg-up": "^5.0.0",
@@ -39,7 +39,7 @@
     "source-map-url": "^0.4.0",
     "unixify": "^1.0.0",
     "yargonaut": "^1.1.2",
-    "yargs": "^13.1.0"
+    "yargs": "^14.0.0"
   },
   "devDependencies": {
     "ava": "^1.0.1",
@@ -49,9 +49,9 @@
     "codecov": "^3.0.0",
     "conventional-changelog-metahub": "^2.0.1",
     "execa": "^1.0.0",
-    "nyc": "^13.1.0",
+    "nyc": "^14.0.0",
     "randomstring": "^1.1.5",
-    "rimraf": "^2.6.1",
+    "rimraf": "^3.0.0",
     "semantic-release": "^15.7.1",
     "temp-dir": "^1.0.0",
     "tempy": "^0.2.0",
