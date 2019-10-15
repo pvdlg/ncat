@@ -47,7 +47,7 @@
     "babel-preset-env": "^1.6.0",
     "chalk": "^2.0.1",
     "codecov": "^3.0.0",
-    "conventional-changelog-metahub": "^2.0.1",
+    "conventional-changelog-metahub": "^3.0.0",
     "execa": "^1.0.0",
     "nyc": "^13.1.0",
     "randomstring": "^1.1.5",
