@@ -51,6 +51,11 @@ const {argv} = yargs
 		desc: 'Output file',
 		type: 'string',
 	})
+	.option('s', {
+		alias: 'separator',
+		desc: 'Define what separates the source files in the output',
+		type: 'string'
+	})
 	.option('m', {
 		alias: 'map',
 		desc: 'Create an external sourcemap (including the sourcemaps of existing files)',
@@ -97,7 +102,7 @@ If -o is not passed, the sourcemap is disabled and it writes to stdout.`
 const concat = new Concat(
 	argv.output !== undefined && argv.output !== null && argv.map,
 	argv.output ? path.basename(argv.output) : '',
-	'\n'
+	argv.separator ? argv.separator : '\n'
 );
 /**
  * Cache the content of stdin the first it's retrieve.
