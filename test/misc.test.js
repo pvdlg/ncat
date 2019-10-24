@@ -1,3 +1,4 @@
+import {EOL} from 'os';
 import test from 'ava';
 import cli from './helpers/cli';
 
@@ -18,5 +19,5 @@ test('--version', async t => {
 
 	t.falsy(error, stderr);
 	t.is(exitCode, 0, 'expected zero return code');
-	t.is(stdout, `${version}\n`);
+	t.is(stdout, `${version}${EOL}`);
 });

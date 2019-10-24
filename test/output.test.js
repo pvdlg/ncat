@@ -1,3 +1,4 @@
+import {EOL} from 'os';
 import path from 'path';
 import test from 'ava';
 import randomstring from 'randomstring';
@@ -22,7 +23,7 @@ test('preserve order with large number of files', async t => {
 	const filepaths = [];
 	const expected = [];
 
-	for (let i = 0; i < 100; i++) {
+	for (let i = 0; i < 50; i++) {
 		const filepath = path.join(tmp, `file-${i}`);
 		const content = randomstring.generate();
 
@@ -36,5 +37,5 @@ test('preserve order with large number of files', async t => {
 	const {error, stderr} = await cli(filepaths.concat(['-o', outputFile]));
 
 	t.falsy(error, stderr);
-	t.is(expected.join('\n'), await read(outputFile));
+	t.is(expected.join(EOL), await read(outputFile));
 });
