@@ -3,25 +3,6 @@
   "description": "Node CLI to concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer",
   "version": "0.0.0-development",
   "author": "Pierre Vanduynslager",
-  "ava": {
-    "babel": {
-      "testOptions": {
-        "babelrc": false
-      }
-    }
-  },
-  "babel": {
-    "presets": [
-      [
-        "env",
-        {
-          "targets": {
-            "node": "6"
-          }
-        }
-      ]
-    ]
-  },
   "bin": {
     "ncat": "./bin/ncat.js"
   },
@@ -43,25 +24,22 @@
   },
   "devDependencies": {
     "ava": "^1.0.1",
-    "babel-cli": "^6.24.1",
-    "babel-preset-env": "^1.6.0",
     "chalk": "^2.0.1",
     "codecov": "^3.0.0",
     "conventional-changelog-metahub": "^2.0.1",
     "execa": "^1.0.0",
     "nyc": "^14.0.0",
     "randomstring": "^1.1.5",
-    "rimraf": "^3.0.0",
     "semantic-release": "^15.7.1",
     "temp-dir": "^1.0.0",
     "tempy": "^0.2.0",
     "xo": "^0.23.0"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=8.16"
   },
   "files": [
-    "lib",
+    "index.js",
     "bin"
   ],
   "homepage": "https://github.com/pvdlg/ncat#readme",
@@ -81,7 +59,7 @@
   "main": "index.js",
   "nyc": {
     "include": [
-      "lib/**/*.js",
+      "index.js",
       "bin/**/*"
     ],
     "reporter": [
@@ -108,10 +86,8 @@
   },
   "scripts": {
     "codecov": "codecov -f coverage/coverage-final.json",
-    "compile": "rimraf lib && babel src --source-maps --out-dir lib",
     "lint": "xo",
-    "prepublishOnly": "npm run compile",
-    "pretest": "npm run compile && npm run lint",
+    "pretest": "npm run lint",
     "semantic-release": "semantic-release",
     "test": "nyc ava -v"
   },
