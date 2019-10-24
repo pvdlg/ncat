@@ -1,3 +1,4 @@
+const {EOL} = require('os');
 const path = require('path');
 const fs = require('fs-extra');
 const pify = require('pify');
@@ -25,14 +26,14 @@ const getDefaultBanner = packageJson =>
 		packageJson.name ? packageJson.name.charAt(0).toUpperCase() + packageJson.name.slice(1) : 'unknown'
  } v${packageJson.version || '0.0.0'}${
 		packageJson.homepage || packageJson.name
-			? `\n * ${packageJson.homepage || `https://npm.com/${packageJson.name}`}`
+			? `${EOL} * ${packageJson.homepage || `https://npm.com/${packageJson.name}`}`
 			: ''
 	}
  *
  * Copyright (c) ${new Date().getFullYear()}${
 		packageJson.author && packageJson.author.name ? ` ${packageJson.author.name}` : ''
 	}
- *${packageJson.license ? ` Licensed under the ${packageJson.license} license\n *` : ''}/\n`;
+ *${packageJson.license ? ` Licensed under the ${packageJson.license} license${EOL} *` : ''}/${EOL}`;
 /**
  * Log messages.
  *
@@ -103,7 +104,7 @@ If -o is not passed, the sourcemap is disabled and it writes to stdout.`
 const concat = new Concat(
 	argv.output !== undefined && argv.output !== null && argv.map,
 	argv.output ? path.basename(argv.output) : '',
-	'\n'
+	EOL
 );
 /**
  * Cache the content of stdin the first it's retrieve.
@@ -171,7 +172,7 @@ async function concatFiles() {
 		(files.length === 0 && (typeof argv.banner === 'undefined' || !argv.footer))
 	) {
 		throw new Error(
-			chalk.bold.red('Require at least 2 file, banner or footer to concatenate. ("ncat --help" for help)\n')
+			chalk.bold.red(`Require at least 2 file, banner or footer to concatenate. ("ncat --help" for help)${EOL}`)
 		);
 	}
 
@@ -309,10 +310,10 @@ function output() {
  */
 function getSourceMappingURL() {
 	if (path.extname(argv.output) === '.css') {
-		return `\n/*# sourceMappingURL=${path.basename(argv.output)}.map */`;
+		return `${EOL}/*# sourceMappingURL=${path.basename(argv.output)}.map */`;
 	}
 
-	return `\n//# sourceMappingURL=${path.basename(argv.output)}.map`;
+	return `${EOL}//# sourceMappingURL=${path.basename(argv.output)}.map`;
 }
 
 /**
@@ -322,7 +323,7 @@ function getSourceMappingURL() {
  * @return {String} the modified code.
  */
 function removeMapURL(code) {
-	return sourceMappingURL.removeFrom(code.toString()).replace(/\n\n$/, '\n');
+	return sourceMappingURL.removeFrom(code.toString()).replace(new RegExp(`${EOL}${EOL}$`), EOL);
 }
 
 /**

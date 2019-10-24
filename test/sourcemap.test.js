@@ -6,6 +6,7 @@ import tempDir from 'temp-dir';
 import unixify from 'unixify';
 import cli from './helpers/cli';
 import read from './helpers/read';
+import eol from './helpers/eol';
 
 test('--map generate an external map (css)', async t => {
 	const output = tempy.file({extension: 'css'});
@@ -148,8 +149,8 @@ test('--map generate an external map and preserve embeded code', async t => {
 	t.truthy(await fs.pathExists(output.replace('.css', '.css.map')));
 	const sourceMap = JSON.parse(await read(output.replace('.css', '.css.map')));
 
-	t.is(await read('test/fixtures/a.css'), sourceMap.sourcesContent[0]);
-	t.is(await read('test/fixtures/b.css'), sourceMap.sourcesContent[1]);
+	t.is(await read('test/fixtures/a.css'), eol(sourceMap.sourcesContent[0]));
+	t.is(await read('test/fixtures/b.css'), eol(sourceMap.sourcesContent[1]));
 });
 
 test("--map generate an external map and do not embed code if it wasn't embeded in original map", async t => {
