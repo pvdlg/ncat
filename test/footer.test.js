@@ -26,9 +26,9 @@ test('--footer works with custom footer', async t => {
 });
 
 test('--footer works with one file', async t => {
-	const {code} = await cli(['test/fixtures/a.css', '-f', 'test/fixtures/footer.js']);
+	const {exitCode} = await cli(['test/fixtures/a.css', '-f', 'test/fixtures/footer.js']);
 
-	t.is(code, 0, 'expected zero return code');
+	t.is(exitCode, 0, 'expected zero return code');
 });
 
 test('--footer works with a banner and a footer', async t => {

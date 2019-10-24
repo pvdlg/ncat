@@ -40,9 +40,9 @@ test('--banner works with custom banner', async t => {
 });
 
 test('--banner works with one file', async t => {
-	const {code} = await cli(['test/fixtures/a.css', '-b']);
+	const {exitCode} = await cli(['test/fixtures/a.css', '-b']);
 
-	t.is(code, 0, 'expected zero return code');
+	t.is(exitCode, 0, 'expected zero return code');
 });
 
 test('--banner works with empty package.json', async t => {
