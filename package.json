@@ -3,6 +3,14 @@
   "description": "Node CLI to concatenate multiple files, with their sourcemaps and optionally stdin, a banner and a footer",
   "version": "0.0.0-development",
   "author": "Pierre Vanduynslager",
+  "ava": {
+    "helpers": [
+      "test/helpers/**/*"
+    ],
+    "files": [
+      "test/*.test.js"
+    ]
+  },
   "bin": {
     "ncat": "./bin/ncat.js"
   },
@@ -23,7 +31,7 @@
     "yargs": "^14.0.0"
   },
   "devDependencies": {
-    "ava": "^1.0.1",
+    "ava": "^2.4.0",
     "chalk": "^2.0.1",
     "codecov": "^3.0.0",
     "conventional-changelog-metahub": "^2.0.1",
