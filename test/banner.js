@@ -4,7 +4,7 @@ import tempy from 'tempy';
 import cli from './helpers/cli';
 import read from './helpers/read';
 
-const {pkg} = require('read-pkg-up').sync();
+const {packageJson} = require('read-pkg-up').sync();
 
 test('--banner works with default banner', async t => {
 	const output = tempy.file({extension: 'css'});
@@ -15,7 +15,7 @@ test('--banner works with default banner', async t => {
 		await read(output),
 		(await read('test/fixtures/expected/ab-header.css'))
 			.replace('<% year %>', new Date().getFullYear())
-			.replace('<% version %>', pkg.version)
+			.replace('<% version %>', packageJson.version)
 	);
 });
 
@@ -35,7 +35,7 @@ test('--banner works with custom banner', async t => {
 		await read(output),
 		(await read('test/fixtures/expected/ab-header.css'))
 			.replace('<% year %>', new Date().getFullYear())
-			.replace('<% version %>', pkg.version)
+			.replace('<% version %>', packageJson.version)
 	);
 });
 

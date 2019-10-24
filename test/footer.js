@@ -3,7 +3,7 @@ import tempy from 'tempy';
 import cli from './helpers/cli';
 import read from './helpers/read';
 
-const {pkg} = require('read-pkg-up').sync();
+const {packageJson} = require('read-pkg-up').sync();
 
 test('--footer works with custom footer', async t => {
 	const output = tempy.file({extension: 'css'});
@@ -21,7 +21,7 @@ test('--footer works with custom footer', async t => {
 		await read(output),
 		(await read('test/fixtures/expected/ab-footer.css'))
 			.replace('<% year %>', new Date().getFullYear())
-			.replace('<% version %>', pkg.version)
+			.replace('<% version %>', packageJson.version)
 	);
 });
 
@@ -40,6 +40,6 @@ test('--footer works with a banner and a footer', async t => {
 		await read(output),
 		(await read('test/fixtures/expected/banner-footer.css'))
 			.replace('<% year %>', new Date().getFullYear())
-			.replace('<% version %>', pkg.version)
+			.replace('<% version %>', packageJson.version)
 	);
 });
