@@ -22,7 +22,6 @@ test('preserve order with large number of files', async t => {
 	const filepaths = [];
 	const expected = [];
 
-	// eslint-disable-next-line no-magic-numbers
 	for (let i = 0; i < 100; i++) {
 		const filepath = path.join(tmp, `file-${i}`);
 		const content = randomstring.generate();
@@ -31,6 +30,7 @@ test('preserve order with large number of files', async t => {
 		expected.push(content);
 		outputFilePromises.push(fs.outputFile(filepath, content, {encoding: 'utf8'}));
 	}
+
 	await Promise.all(outputFilePromises);
 
 	const {error, stderr} = await cli(filepaths.concat(['-o', outputFile]));
