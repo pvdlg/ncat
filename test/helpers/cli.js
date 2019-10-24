@@ -1,5 +1,6 @@
 import path from 'path';
 import execa from 'execa';
+import eol from './eol';
 
 /**
  * Execute the ncat command line.
@@ -9,6 +10,11 @@ import execa from 'execa';
  * @param {String} cwd Current working directory of the ncat cli process.
  * @return {Promise<ChildProcess>} A Promise that resolve to the CLI execution result (as ChildProcess instance).
  */
-export default function cli(args, input, cwd) {
-	return execa(path.resolve('bin/ncat.js'), args, {cwd, input, stripEof: false});
+export default async function cli(args, input, cwd) {
+	const {stdout, stderr, ...result} = await execa(path.resolve('bin/ncat.js'), args, {
+		cwd,
+		input,
+		stripFinalNewline: false,
+	});
+	return {stdout: eol(stdout), stderr: eol(stderr), ...result};
 }

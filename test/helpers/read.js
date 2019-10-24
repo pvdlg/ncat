@@ -1,4 +1,5 @@
 import {readFile} from 'fs-extra';
+import eol from './eol';
 
 /**
  * Asynchronously reads the entire contents of a file.
@@ -6,6 +7,6 @@ import {readFile} from 'fs-extra';
  * @param {String} path file path.
  * @return {String} the content of the file.
  */
-export default function read(path) {
-	return readFile(path, 'utf8');
+export default async function read(path) {
+	return eol(await readFile(path, 'utf8'));
 }
