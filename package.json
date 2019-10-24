@@ -34,7 +34,6 @@
     "ava": "^2.4.0",
     "chalk": "^2.0.1",
     "codecov": "^3.0.0",
-    "conventional-changelog-metahub": "^2.0.1",
     "execa": "^3.2.0",
     "nyc": "^14.0.0",
     "randomstring": "^1.1.5",
@@ -83,10 +82,6 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "release": {
-    "preset": "metahub",
-    "releaseRules": "conventional-changelog-metahub/release-rules"
   },
   "repository": {
     "type": "git",
