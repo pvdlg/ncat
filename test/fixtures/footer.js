@@ -1,3 +1,3 @@
-const pkg = require('read-pkg-up').sync().pkg;
+const {packageJson} = require('read-pkg-up').sync();
 
-module.exports = `/* Custom footer for ${pkg.name} */\n`;
+module.exports = `/* Custom footer for ${packageJson.name} */\n`;

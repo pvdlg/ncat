@@ -16,17 +16,23 @@ const chalk = yargonaut.chalk();
 /**
  * Produce the default banner based on package.json info.
  *
- * @param {Object} pkg the parsed package.json.
+ * @param {Object} packageJson the parsed package.json.
  * @returns {String} the default banner.
  */
-const getDefaultBanner = pkg =>
+const getDefaultBanner = packageJson =>
 	`/*!
- * ${pkg.name ? pkg.name.charAt(0).toUpperCase() + pkg.name.slice(1) : 'unknown'} v${pkg.version || '0.0.0'}${
-		pkg.homepage || pkg.name ? `\n * ${pkg.homepage || `https://npm.com/${pkg.name}`}` : ''
+ * ${
+		packageJson.name ? packageJson.name.charAt(0).toUpperCase() + packageJson.name.slice(1) : 'unknown'
+ } v${packageJson.version || '0.0.0'}${
+		packageJson.homepage || packageJson.name
+			? `\n * ${packageJson.homepage || `https://npm.com/${packageJson.name}`}`
+			: ''
 	}
  *
- * Copyright (c) ${new Date().getFullYear()}${pkg.author && pkg.author.name ? ` ${pkg.author.name}` : ''}
- *${pkg.license ? ` Licensed under the ${pkg.license} license\n *` : ''}/\n`;
+ * Copyright (c) ${new Date().getFullYear()}${
+		packageJson.author && packageJson.author.name ? ` ${packageJson.author.name}` : ''
+	}
+ *${packageJson.license ? ` Licensed under the ${packageJson.license} license\n *` : ''}/\n`;
 /**
  * Log messages.
  *
@@ -133,7 +139,7 @@ async function concatBanner() {
 		}
 
 		const pkg = await readPkg();
-		concat.add(null, getDefaultBanner(pkg.pkg));
+		concat.add(null, getDefaultBanner(pkg.packageJson));
 		return log('dbanner', pkg.path);
 	}
 }
