@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-require('../lib')()
+require('..')()
 	.then(() => process.exit(0))
 	.catch(error => {
 		console.error(`\n  ${error.message}`);
