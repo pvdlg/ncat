@@ -8,6 +8,8 @@ import cli from './helpers/cli';
 import read from './helpers/read';
 import eol from './helpers/eol';
 
+/* eslint prefer-named-capture-group: "off" */
+
 test('--map generate an external map (css)', async t => {
 	const output = tempy.file({extension: 'css'});
 	const {error, stderr} = await cli(['test/fixtures/a.css', 'test/fixtures/b.css', '-m', '-o', output]);
