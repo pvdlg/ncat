@@ -15,8 +15,7 @@ branches:
     - /^greenkeeper.*$/
 
 cache:
-  directories:
-    - ~/.npm
+  npm: false
 
 install:
   - travis_retry npm install
